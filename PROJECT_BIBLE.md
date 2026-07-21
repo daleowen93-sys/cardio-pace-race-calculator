@@ -1,0 +1,276 @@
+# Cardio Pace & Race Calculator — Project Bible
+
+**Version:** 0.2
+**Status:** Tech stack and unit-handling decisions confirmed — standard distances and rounding rules still open
+**Last updated:** 22 July 2026
+**Owner:** Project Owner (beginner developer, Windows)
+
+## How to use this document
+This is the single source of truth for the project. Every entry is labelled:
+
+- **CONFIRMED** — approved, do not change without going through the conflict process
+- **PROPOSED** — a recommendation, not yet approved
+- **ASSUMPTION** — a conservative default used to keep moving, clearly reversible
+- **REQUIRES DECISION** — blocks or affects MVP scope; needs your input
+- **FUTURE IDEA** — explicitly out of scope for v1
+
+Keep this file updated as decisions are confirmed. Paste it into this Project's Knowledge/Files so all specialist conversations can see it.
+
+---
+
+## 1. Product Vision
+**CONFIRMED.** A polished, responsive web application that lets athletes calculate pace, speed, time and distance for Running, Cycling, Swimming and Triathlon, in both metric and imperial units, without needing multiple separate tools. Built as a foundation that can later expand into a mobile app and a broader endurance-training platform without a rebuild.
+
+## 2. Problem Being Solved
+**ASSUMPTION** (reasonable inference, not yet explicitly confirmed by you): Recreational and competitive endurance athletes currently rely on scattered, single-purpose calculators of inconsistent accuracy and inconsistent unit support, and have no single tool that handles all four disciplines with reliable maths and clean UX.
+
+## 3. Target Users
+**ASSUMPTION:** Recreational to serious age-group athletes (runners, cyclists, swimmers, triathletes) who want fast, accurate calculations on any device. No formal personas defined yet.
+**REQUIRES DECISION (low priority):** Do we design for total beginners to the sport, competitive athletes, or both? This can wait until Product Scope & UX conversation.
+
+## 4. Product Principles
+**PROPOSED:**
+1. Accuracy before features — never ship a calculator whose formula isn't documented and tested.
+2. Simple, obvious UX — activity selection first, minimal fields, clear results.
+3. Consistency — same interaction patterns across all four calculators.
+4. Low cost to build and run.
+5. Expandable without rebuilding (logic separated from UI).
+6. Accessible by default, not bolted on later.
+
+## 5. Confirmed Requirements
+**CONFIRMED** (from your brief):
+- Activity selection screen first (Running / Cycling / Swimming / Triathlon).
+- Calculations: distance, time, pace, speed, race splits, estimated finishing times, standard race distances, custom distances.
+- Running: min/km, min/mile, km, miles.
+- Cycling: km/h, mph, km, miles.
+- Swimming: pace/100m, pace/100yd, pace/500m, metres, yards.
+- Triathlon: individual swim/bike/run calculations, transition times, individual leg times, total estimated finish time, standard and custom triathlon distances.
+- Full metric/imperial support with accurate conversion.
+- Responsive: desktop, tablet, mobile browsers.
+- Calculator logic separated from UI (for future reuse in a mobile app).
+- Canonical internal units: distance in metres, duration in seconds; convert only at input/output boundaries; never chain rounded values into further maths.
+
+## 6. MVP Scope
+**PROPOSED** (built directly from your confirmed requirements — needs your sign-off as a set):
+- 4 calculators: Running, Cycling, Swimming, Triathlon.
+- Each calculator supports solving for the "missing" value (e.g. given distance + time, find pace; given pace + distance, find time; given pace + time, find distance).
+- Standard race distances selectable from a list, plus a custom distance option, per activity.
+- Metric/imperial switching.
+- Fully responsive layout, no horizontal scrolling, usable one-handed on mobile.
+- Client-side only — no accounts, no login, no server-side storage.
+- No data persistence between sessions in v1 (results are not saved).
+
+## 7. Items Excluded from MVP
+**FUTURE IDEA** (explicitly deferred per your instructions, not to be added without approval):
+- Dedicated mobile application
+- User accounts / login
+- Saved calculations / history
+- Race planning tools
+- Training tools
+- Performance predictions
+- Broader endurance-training platform features
+
+## 8. User Journeys
+**PROPOSED (draft, to be refined in Product Scope & UX conversation):**
+- **Primary journey:** Land on home screen → choose activity → land on that activity's calculator → choose "what am I solving for" (pace / time / distance / speed) → enter known values + units → see result.
+- **Race-distance journey:** Choose activity → pick a standard distance (e.g. 10K, Half Marathon, Olympic Triathlon) instead of typing a custom one → enter pace or goal time → see splits/finish time.
+- **Triathlon journey (more complex):** Choose Triathlon → pick standard or custom triathlon distance → enter swim/bike/run pace or speed for each leg → enter transition times → see individual leg times and total estimated finish time.
+
+## 9. Calculator & Activity Structure
+**CONFIRMED (units/measurements)** — table below is the reference for all calculator work.
+
+| Activity | Metric units | Imperial units | Special formats |
+|---|---|---|---|
+| Running | km | miles | min/km, min/mile |
+| Cycling | km | miles | km/h, mph |
+| Swimming | metres | yards | pace/100m, pace/100yd, pace/500m |
+| Triathlon | combination of the above per leg | combination of the above per leg | leg times, transitions, total time |
+
+**REQUIRES DECISION:** Exact list of "standard distances" to offer per activity (e.g. Running: 5K, 10K, Half Marathon, Marathon — Triathlon: Sprint, Olympic, 70.3, Full — Swimming: 750m/1500m/3800m open-water equivalents, or pool distances). To be finalised in Exercise Science & Calculator Logic conversation.
+
+## 10. Functional Requirements
+**CONFIRMED (from brief):**
+- Solve for pace, speed, time, or distance given the other two.
+- Race split calculation.
+- Estimated finishing time calculation.
+- Standard and custom distance support.
+- Metric/imperial conversion, accurate both ways.
+- Triathlon: per-leg + transition + total time.
+
+## 11. Non-Functional Requirements
+**PROPOSED:**
+- Responsive across desktop, tablet, mobile.
+- Fast load (static site, minimal dependencies).
+- Accessible (see Section 14).
+- Low/zero hosting cost.
+- Maintainable, modular, commented code.
+- No build-step complexity beyond what's necessary for a beginner to manage.
+
+## 12. Mathematical & Unit-Handling Principles
+**CONFIRMED:**
+- Internal canonical units: **metres** for distance, **seconds** for duration.
+- Pace and speed are always *derived* from canonical distance/duration, never stored independently.
+- Unit conversion happens only at the input boundary (user enters miles → convert to metres internally) and the output boundary (convert metres back to km/miles for display).
+- Full-precision values are always used for further calculation; only the *displayed* value is rounded.
+- **Default unit system (CONFIRMED, 22 Jul 2026):** auto-detected from the user's browser/locale on first load (e.g. imperial for a US locale, metric elsewhere). **Fallback rule (PROPOSED):** if detection is inconclusive, default to metric, since it's the global standard. This needs no further approval unless you'd like to change the fallback.
+
+**REQUIRES DECISION (per calculator, done in Exercise Science conversation before any code is written):** exact rounding rule for each displayed value (e.g. pace to nearest second, distance to 2 decimal places, etc.).
+
+## 13. Input, Validation & Rounding Principles
+**CONFIRMED (categories to handle, from your brief):**
+- Missing values
+- Zero values where invalid (e.g. zero time)
+- Negative values
+- Impossible time formats (e.g. 90 seconds entered as ":90")
+- Unsupported units
+- Extremely large values
+- Decimal/rounding errors
+
+**PROPOSED:** Every calculator's formula documentation (Section 12's per-calculator decision) must define required inputs, accepted units, internal units, formula, conversion method, rounding rule, validation rule, expected output, known edge cases, and test examples — **before** implementation begins, per your instructions.
+
+## 14. Accessibility Requirements
+**PROPOSED:**
+- Full keyboard navigation (tab order, enter-to-submit).
+- Semantic HTML (proper labels, form elements, headings).
+- Sufficient colour contrast (WCAG AA minimum).
+- Visible focus states.
+- Error messages that are programmatically associated with their field (for screen readers).
+- Touch targets sized appropriately for mobile.
+
+## 15. Initial Technical Architecture
+**PROPOSED (REQUIRES DECISION for approval):**
+- Client-side-only responsive web app. No backend/server needed for MVP (no accounts, no saved data).
+- Calculator logic lives in its own set of plain JavaScript modules, completely independent of the UI/DOM — these modules are the part most likely to be reused in a future mobile app.
+- UI layer calls into the logic modules and only handles display, input capture, and formatting.
+- Static hosting (no server to run or pay for).
+
+## 16. Technology Decisions
+**CONFIRMED — 22 July 2026.**
+
+| Decision | Recommended option | Why |
+|---|---|---|
+| Frontend | Plain HTML, CSS, and JavaScript (ES modules), no framework | Zero build tooling to learn, runs by just opening a file or a simple static server, easiest on-ramp for a beginner, free to host, and the logic-separation principle (Section 15) means we don't lose the ability to move to a framework later. |
+| Alternative considered | React | More "industry standard," component reuse is cleaner, but requires learning Node.js, npm, JSX, and a build step before writing your first calculator — meaningfully steeper for a beginner and not necessary for a 4-calculator MVP. |
+| Testing | Jest, run via Node.js, testing only the logic modules (not the UI) | Free, extremely well documented, beginner-friendly, and lets us test formulas in isolation exactly as your brief requires. |
+| Version control | Git + GitHub | Already confirmed by your project instructions. |
+| Hosting | GitHub Pages | Free, integrates directly with the GitHub repo we're already using, no server to manage, perfectly suited to a static client-side app. |
+
+**Confirmed approach:** vanilla HTML/CSS/JS + Jest + GitHub + GitHub Pages. This is the lowest-cost, lowest-complexity path that still meets every professional requirement in your brief (modular, testable, maintainable, expandable). If down the line the app grows into the mobile app / larger platform, the separated logic modules can be lifted into a React/React Native project with minimal rewriting.
+
+## 17. Application Structure
+**PROPOSED (draft skeleton, to be finalised once tech stack is approved):**
+```
+cardio-pace-race-calculator/
+├── PROJECT_BIBLE.md            (this document — kept in sync with Claude Project Knowledge)
+├── index.html                 (activity selection screen)
+├── /running/
+│   └── index.html
+├── /cycling/
+│   └── index.html
+├── /swimming/
+│   └── index.html
+├── /triathlon/
+│   └── index.html
+├── /css/
+│   └── styles.css
+├── /js/
+│   ├── /logic/                (pure calculation modules — no DOM code)
+│   │   ├── running.js
+│   │   ├── cycling.js
+│   │   ├── swimming.js
+│   │   ├── triathlon.js
+│   │   └── unitConversion.js
+│   └── /ui/                   (DOM/interaction code per activity)
+│       ├── running-ui.js
+│       ├── cycling-ui.js
+│       ├── swimming-ui.js
+│       └── triathlon-ui.js
+├── /tests/
+│   ├── running.test.js
+│   ├── cycling.test.js
+│   ├── swimming.test.js
+│   ├── triathlon.test.js
+│   └── unitConversion.test.js
+└── README.md
+```
+
+## 18. UI/UX Decisions
+**CONFIRMED, 22 July 2026:**
+- Activity selection is the first screen a user sees (also Section 5).
+- Unit switching uses **one global toggle for the whole app**, not a separate toggle per calculator — switching it updates every calculator consistently.
+- The toggle does not persist between visits in v1 (no accounts/storage yet, per Section 7). On each visit, the default is re-detected per the rule in Section 12.
+
+Everything else (layout, visual style, colour, typography) is still open and will be developed in the UI/UX & Visual Design conversation.
+
+## 19. Testing Strategy
+**CONFIRMED (categories, from your brief):**
+- Formula unit tests
+- Unit-conversion tests
+- Input-validation tests
+- Known race-distance examples
+- Metric vs imperial comparison tests
+- Rounding tests
+- Boundary/edge cases
+- Mobile responsiveness
+- Keyboard accessibility
+- Clear error states
+- Cross-browser checks
+- Regression testing after every bug fix
+
+**PROPOSED:** Logic-module tests written in Jest, run before every commit that touches calculation code. UI/responsiveness/accessibility tested manually against a documented checklist (to be built in the Testing, QA & Bug Fixes conversation).
+
+## 20. Git & GitHub Workflow
+**PROPOSED:**
+- One GitHub repository for the whole project.
+- Single `main` branch during MVP build (low complexity, single developer) — small, frequent, meaningful commits directly to `main` once each step is verified working.
+- Commit messages describe what changed and why (e.g. `Add running pace calculator logic module`).
+- Revisit branching strategy (e.g. feature branches) only if/when complexity grows — no need to over-engineer this now.
+
+## 21. Deployment Approach
+**PROPOSED:** GitHub Pages, deployed from the `main` branch. Free, no server management, updates automatically when you push changes once set up.
+
+## 22. Development Phases
+**PROPOSED high-level roadmap** (detail in the deliverables below):
+0. Setup — GitHub repo, local tools, project skeleton
+1. Finalise scope & open decisions (this conversation)
+2. Document all calculator formulas, units, rounding & edge cases (Exercise Science conversation) — no code until this is done
+3. UI/UX design direction (UI/UX conversation)
+4. Build Running calculator (simplest, proves the pattern end-to-end)
+5. Build Cycling calculator
+6. Build Swimming calculator
+7. Build Triathlon calculator (most complex, depends on the other three)
+8. Full responsive polish + accessibility pass
+9. Testing & QA pass
+10. Deploy v1
+
+## 23. Decision Log
+| # | Date | Decision | Status |
+|---|---|---|---|
+| 1 | 22 Jul 2026 | Project Bible established as the authoritative source of truth | CONFIRMED |
+| 2 | 22 Jul 2026 | MVP = 4 calculators, client-side only, no accounts/saved data | PROPOSED — awaiting approval |
+| 3 | 22 Jul 2026 | Tech stack: vanilla HTML/CSS/JS + Jest + GitHub Pages | CONFIRMED |
+| 4 | 22 Jul 2026 | Unit switching: single global toggle, not per-calculator | CONFIRMED |
+| 5 | 22 Jul 2026 | Default units: auto-detected from browser/locale, fallback to metric | CONFIRMED |
+
+## 24. Risks & Unresolved Questions
+**REQUIRES DECISION:**
+1. Exact list of standard race distances per activity (Section 9) — for the Exercise Science & Calculator Logic conversation.
+2. Exact rounding rules per calculator (Section 12/13) — needed before any formula is coded, same conversation.
+3. MVP scope as a whole set (Section 6) still needs an explicit sign-off, even though its individual parts come straight from your brief.
+
+**Lower-priority, can wait:**
+- Visual design direction/branding.
+- Whether v1 should be a Progressive Web App (offline support) — currently out of scope unless you want to add it.
+
+## 25. Current Project Status
+Version 0.2 of the Project Bible. Technology stack, global unit-toggle behaviour, and default-unit detection are confirmed. **Phase 0 (setup) is complete:** GitHub repository `cardio-pace-race-calculator` created under account `da1eowen93-sys`, connected via GitHub Desktop, folder/file skeleton scaffolded per Section 17, and pushed to GitHub.com — verified 22 Jul 2026. No application code has been written yet (all scaffolded files are intentionally empty). Standard race distances and per-calculator rounding rules still need to be defined in the Exercise Science & Calculator Logic conversation before any formula is implemented — that is the next phase.
+
+## 26. Future Roadmap
+**FUTURE IDEA (not part of v1, listed here only to keep architecture expansion-friendly):**
+- Dedicated mobile app (reusing the logic modules from Section 15/17)
+- User accounts
+- Saved calculations
+- Race planning tools
+- Training tools
+- Performance predictions
+- Broader endurance-training platform
