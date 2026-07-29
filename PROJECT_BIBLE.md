@@ -86,7 +86,9 @@ Keep this file updated as decisions are confirmed. Paste it into this Project's 
 | Swimming | metres | yards | pace/100m, pace/100yd, pace/500m |
 | Triathlon | combination of the above per leg | combination of the above per leg | leg times, transitions, total time |
 
-**REQUIRES DECISION:** Exact list of "standard distances" to offer per activity (e.g. Running: 5K, 10K, Half Marathon, Marathon — Triathlon: Sprint, Olympic, 70.3, Full — Swimming: 750m/1500m/3800m open-water equivalents, or pool distances). To be finalised in Exercise Science & Calculator Logic conversation.
+**CONFIRMED, 29 Jul 2026 — Running standard distances:** 1 Mile (1,609.344 m), 5K (5,000 m), 10K (10,000 m), Half Marathon (21,097.5 m / 21.0975 km), Marathon (42,195 m / 42.195 km), plus a custom distance field.
+
+**REQUIRES DECISION:** Standard distances for Cycling, Swimming, and Triathlon — still to be finalised in the Exercise Science & Calculator Logic conversation.
 
 ## 10. Functional Requirements
 **CONFIRMED (from brief):**
@@ -114,7 +116,13 @@ Keep this file updated as decisions are confirmed. Paste it into this Project's 
 - Full-precision values are always used for further calculation; only the *displayed* value is rounded.
 - **Default unit system (CONFIRMED, 22 Jul 2026):** auto-detected from the user's browser/locale on first load (e.g. imperial for a US locale, metric elsewhere). **Fallback rule (PROPOSED):** if detection is inconclusive, default to metric, since it's the global standard. This needs no further approval unless you'd like to change the fallback.
 
-**REQUIRES DECISION (per calculator, done in Exercise Science conversation before any code is written):** exact rounding rule for each displayed value (e.g. pace to nearest second, distance to 2 decimal places, etc.).
+**CONFIRMED, 29 Jul 2026 — Running rounding rules:**
+- Pace (min/km, min/mile): rounded to nearest whole second, round-half-up.
+- Time (finish time, splits): rounded to nearest whole second, displayed h:mm:ss (or mm:ss under an hour).
+- Distance: 2 decimal places (km/mi) for custom distances; standard distances show their label (e.g. "Half Marathon").
+- All calculations always use the full-precision stored value, never a rounded display value.
+
+**REQUIRES DECISION:** Rounding rules for Cycling, Swimming, and Triathlon — still to be finalised.
 
 ## 13. Input, Validation & Rounding Principles
 **CONFIRMED (categories to handle, from your brief):**
@@ -127,6 +135,8 @@ Keep this file updated as decisions are confirmed. Paste it into this Project's 
 - Decimal/rounding errors
 
 **PROPOSED:** Every calculator's formula documentation (Section 12's per-calculator decision) must define required inputs, accepted units, internal units, formula, conversion method, rounding rule, validation rule, expected output, known edge cases, and test examples — **before** implementation begins, per your instructions.
+
+**CONFIRMED, 29 Jul 2026 — Impossible time format handling (Running, and default for other calculators unless overridden):** Rejected with an inline error message (e.g. "Seconds must be between 0 and 59") rather than silently auto-corrected. Extremely large values show a soft warning but aren't blocked.
 
 ## 14. Accessibility Requirements
 **PROPOSED:**
@@ -251,11 +261,14 @@ Everything else (layout, visual style, colour, typography) is still open and wil
 | 3 | 22 Jul 2026 | Tech stack: vanilla HTML/CSS/JS + Jest + GitHub Pages | CONFIRMED |
 | 4 | 22 Jul 2026 | Unit switching: single global toggle, not per-calculator | CONFIRMED |
 | 5 | 22 Jul 2026 | Default units: auto-detected from browser/locale, fallback to metric | CONFIRMED |
+| 6 | 29 Jul 2026 | Running standard distances: 1 Mile, 5K, 10K, Half Marathon, Marathon + custom | CONFIRMED |
+| 7 | 29 Jul 2026 | Running rounding rules (pace/time to nearest second, distance to 2 decimals) | CONFIRMED |
+| 8 | 29 Jul 2026 | Impossible time formats rejected with error message, not auto-corrected | CONFIRMED |
 
 ## 24. Risks & Unresolved Questions
 **REQUIRES DECISION:**
-1. Exact list of standard race distances per activity (Section 9) — for the Exercise Science & Calculator Logic conversation.
-2. Exact rounding rules per calculator (Section 12/13) — needed before any formula is coded, same conversation.
+1. Standard race distances for Cycling, Swimming, and Triathlon (Section 9) — Running resolved 29 Jul 2026.
+2. Rounding rules for Cycling, Swimming, and Triathlon (Section 12/13) — Running resolved 29 Jul 2026.
 3. MVP scope as a whole set (Section 6) still needs an explicit sign-off, even though its individual parts come straight from your brief.
 
 **Lower-priority, can wait:**
