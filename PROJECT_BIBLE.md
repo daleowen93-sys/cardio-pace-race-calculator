@@ -235,7 +235,25 @@ cardio-pace-race-calculator/
 - Unit switching uses **one global toggle for the whole app**, not a separate toggle per calculator — switching it updates every calculator consistently.
 - The toggle does not persist between visits in v1 (no accounts/storage yet, per Section 7). On each visit, the default is re-detected per the rule in Section 12.
 
-Everything else (layout, visual style, colour, typography) is still open and will be developed in the UI/UX & Visual Design conversation.
+**CONFIRMED, 29 Jul 2026 — Visual design direction (v1, subject to refinement after review):**
+- Style: clean, minimal, precise — welcoming to beginners and experienced athletes alike.
+- Theme: follows device/system light-dark preference (prefers-color-scheme); no in-app manual toggle in v1.
+- Typography: system font stack for UI text/labels; system monospace (tabular figures) for all numeric results and splits.
+- Colour tokens — Light: background #F7F8F9, surface #FFFFFF, text #14171A, secondary text #5B6168, border #D8DBDF.
+  Dark: background #121316, surface #1B1D21, text #F2F3F5, secondary text #9AA0A8, border #33363B.
+- Activity accent colours (used sparingly — icons/labels/buttons, not backgrounds): Running #E85D4E, Cycling #2F8F3E, Swimming #0E8FA8, Triathlon #6A4FE0.
+- Signature element: large bold monospace "hero" result number as the visual focus of every calculator screen.
+- Layout: mobile-first, single-column, full-width tappable activity cards with a representative icon per activity, one primary focus per screen.
+
+**CONFIRMED, 29 Jul 2026 — Result interaction model:**
+- No explicit "Calculate" button. Results update live as the user edits any input field, taps a standard-distance chip, or switches solve-for mode (Pace/Time/Distance).
+- Implementation note (for Frontend Development phase): live recalculation should debounce briefly after the last keystroke rather than firing on every keystroke, to avoid computing against incomplete input.
+
+**CONFIRMED, 29 Jul 2026 — Triathlon solve-for model:**
+- Triathlon does not use a Pace/Time/Distance solve-for toggle (unlike Running, Cycling, Swimming).
+- Triathlon always takes distance (standard or custom, per leg) and time (or transition time) per leg as inputs, and always outputs total finish time as the result. No "solve backward" mode (e.g. required pace to hit a target finish time) is in v1 scope.
+
+Visual design direction, result interaction, and Triathlon's solve-for model are now confirmed (see below). Tablet/desktop responsive breakpoints are still open and will be finalised in the UI/UX & Visual Design conversation.
 
 ## 19. Testing Strategy
 **CONFIRMED (categories, from your brief):**
@@ -298,6 +316,9 @@ Everything else (layout, visual style, colour, typography) is still open and wil
 | 15 | 29 Jul 2026 | Triathlon standard distances: Sprint, Olympic, T100, Half Distance, Full Distance + custom per leg (generic naming, not "Ironman" branding) | CONFIRMED |
 | 16 | 29 Jul 2026 | Triathlon rounding: inherits per-leg rules, total time to nearest second | CONFIRMED |
 | 17 | 29 Jul 2026 | Triathlon validation: transitions allow zero/default to zero, inherits other rules | CONFIRMED |
+| 18 | 29 Jul 2026 | Visual design direction confirmed (palette, typography, layout concept) — provisional, may refine after implementation review | CONFIRMED |
+| 19 | 29 Jul 2026 | Result interaction model confirmed: no Calculate button, live-updating results | CONFIRMED |
+| 20 | 29 Jul 2026 | Triathlon solve-for model confirmed: no toggle, always outputs total time from per-leg inputs | CONFIRMED |
 
 ## 24. Risks & Unresolved Questions
 **REQUIRES DECISION:**
