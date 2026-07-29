@@ -1,9 +1,9 @@
 # Cardio Pace & Race Calculator — Project Bible
 
-**Version:** 0.2
-**Status:** Tech stack and unit-handling decisions confirmed — standard distances and rounding rules still open
-**Last updated:** 22 July 2026
-**Owner:** Project Owner (beginner developer, Windows)
+Version: 0.3
+Status: All four calculator formulas confirmed — ready for UI/UX design phase
+Last updated: 29 July 2026
+Project Owner (beginner developer, Windows)
 
 ## How to use this document
 This is the single source of truth for the project. Every entry is labelled:
@@ -92,7 +92,7 @@ Keep this file updated as decisions are confirmed. Paste it into this Project's 
 
 **CONFIRMED, 29 Jul 2026 — Swimming standard distances:** 400m, 800m, 1500m (pool, Olympic distances), 5K and 10K (open water, World Aquatics standard distances), plus a custom distance field. Triathlon distances (Sprint, Olympic, 70.3, Full) are defined separately within the Triathlon calculator, not duplicated here.
 
-**REQUIRES DECISION:** Standard distances for Triathlon — still to be finalised.
+**CONFIRMED, 29 Jul 2026 — Triathlon standard distances:** Sprint (750 m swim / 20,000 m bike / 5,000 m run), Olympic (1,500 m swim / 40,000 m bike / 10,000 m run), T100 (2,000 m swim / 80,000 m bike / 18,000 m run — 100 km total, a World Triathlon-recognised format from the PTO T100 series, sitting between Olympic and Half Distance), Half Distance — 70.3 mi total (1,900 m swim / 90,000 m bike / 21,097.5 m run), Full Distance — 140.6 mi total (3,800 m swim / 180,000 m bike / 42,195 m run), plus a custom distance field for each leg. Generic naming used for Half/Full Distance rather than the trademarked "Ironman" branding. All standard race distances (Running, Cycling, Swimming, Triathlon) are now confirmed — see Decision Log, Section 23.
 
 ## 10. Functional Requirements
 **CONFIRMED (from brief):**
@@ -141,7 +141,7 @@ Keep this file updated as decisions are confirmed. Paste it into this Project's 
 - Race splits every 100m/100yd for distances up to 1500m; every 500m for 5K/10K.
 - All calculations always use the full-precision stored value, never a rounded display value.
 
-**REQUIRES DECISION:** Rounding rules for Triathlon — still to be finalised.
+**CONFIRMED, 29 Jul 2026 — Triathlon rounding rules:** No new rounding rules are introduced — each leg (swim/bike/run) uses its own already-confirmed rounding (nearest second for pace/time). Total finish time is the sum of swim time + T1 + bike time + T2 + run time, rounded to the nearest whole second and displayed as h:mm:ss. All calculator rounding rules (Running, Cycling, Swimming, Triathlon) are now confirmed.
 
 ## 13. Input, Validation & Rounding Principles
 **CONFIRMED (categories to handle, from your brief):**
@@ -160,6 +160,8 @@ Keep this file updated as decisions are confirmed. Paste it into this Project's 
 **CONFIRMED, 29 Jul 2026 — Cycling validation:** Inherits Running's confirmed rules — impossible time formats rejected with an inline error message. Extremely large values show a soft warning (not blocked) above roughly 2,000 km or 100 hours, to accommodate legitimate ultra-distance cycling events.
 
 **CONFIRMED, 29 Jul 2026 — Swimming validation:** Inherits Running's confirmed rules — impossible time formats rejected with an inline error message. Extremely large values show a soft warning (not blocked) above roughly 50 km or 24 hours, to accommodate legitimate marathon/channel swims.
+
+**CONFIRMED, 29 Jul 2026 — Triathlon validation:** Each leg validates using its own already-confirmed rules. Transition times (T1, T2): zero is a valid value, a blank field defaults to zero, negative values are rejected. Impossible time formats are rejected with an inline error message, consistent with all other calculators.
 
 ## 14. Accessibility Requirements
 **PROPOSED:**
@@ -293,11 +295,13 @@ Everything else (layout, visual style, colour, typography) is still open and wil
 | 12 | 29 Jul 2026 | Swimming standard distances: 400m, 800m, 1500m, 5K, 10K + custom (triathlon distances kept separate) | CONFIRMED |
 | 13 | 29 Jul 2026 | Swimming rounding rules (pace to nearest second, distance whole units, mixed split granularity) | CONFIRMED |
 | 14 | 29 Jul 2026 | Swimming validation inherits Running's rules, with a swim-specific large-value threshold | CONFIRMED |
+| 15 | 29 Jul 2026 | Triathlon standard distances: Sprint, Olympic, T100, Half Distance, Full Distance + custom per leg (generic naming, not "Ironman" branding) | CONFIRMED |
+| 16 | 29 Jul 2026 | Triathlon rounding: inherits per-leg rules, total time to nearest second | CONFIRMED |
+| 17 | 29 Jul 2026 | Triathlon validation: transitions allow zero/default to zero, inherits other rules | CONFIRMED |
 
 ## 24. Risks & Unresolved Questions
 **REQUIRES DECISION:**
-1. Standard race distances for Triathlon (Section 9) — Running, Cycling, and Swimming resolved 29 Jul 2026.
-2. Rounding rules for Triathlon (Section 12/13) — Running, Cycling, and Swimming resolved 29 Jul 2026.
+Standard race distances and rounding rules are now confirmed for all four calculators (Running, Cycling, Swimming, Triathlon) as of 29 Jul 2026 — see Decision Log, Section 23, items 6–17. No outstanding items remain in this category.
 3. MVP scope as a whole set (Section 6) still needs an explicit sign-off, even though its individual parts come straight from your brief.
 
 **Lower-priority, can wait:**
@@ -305,7 +309,7 @@ Everything else (layout, visual style, colour, typography) is still open and wil
 - Whether v1 should be a Progressive Web App (offline support) — currently out of scope unless you want to add it.
 
 ## 25. Current Project Status
-Version 0.2 of the Project Bible. Technology stack, global unit-toggle behaviour, and default-unit detection are confirmed. **Phase 0 (setup) is complete:** GitHub repository `cardio-pace-race-calculator` created under account `da1eowen93-sys`, connected via GitHub Desktop, folder/file skeleton scaffolded per Section 17, and pushed to GitHub.com — verified 22 Jul 2026. No application code has been written yet (all scaffolded files are intentionally empty). Standard race distances and per-calculator rounding rules still need to be defined in the Exercise Science & Calculator Logic conversation before any formula is implemented — that is the next phase.
+Version 0.3 of the Project Bible. Technology stack, global unit-toggle behaviour, and default-unit detection are confirmed. Phase 0 (setup) is complete: GitHub repository cardio-pace-race-calculator created under account da1eowen93-sys, connected via GitHub Desktop, folder/file skeleton scaffolded per Section 17, and pushed to GitHub.com — verified 22 Jul 2026. No application code has been written yet (all scaffolded files are intentionally empty). Standard race distances, per-calculator rounding rules, and input validation for all four calculators (Running, Cycling, Swimming, Triathlon) are now fully confirmed — verified 29 Jul 2026. The next phase is UI/UX & Visual Design, to establish layout, colour, and typography before any code is written.
 
 ## 26. Future Roadmap
 **FUTURE IDEA (not part of v1, listed here only to keep architecture expansion-friendly):**
