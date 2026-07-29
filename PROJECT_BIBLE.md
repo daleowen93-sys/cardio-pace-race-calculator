@@ -90,7 +90,9 @@ Keep this file updated as decisions are confirmed. Paste it into this Project's 
 
 **CONFIRMED, 29 Jul 2026 — Cycling standard distances:** 40K Time Trial (40,000 m), Metric Century (100,000 m / 100 km), Century (160,934.4 m / 100 mi / 160.9344 km), plus a custom distance field.
 
-**REQUIRES DECISION:** Standard distances for Swimming and Triathlon — still to be finalised.
+**CONFIRMED, 29 Jul 2026 — Swimming standard distances:** 400m, 800m, 1500m (pool, Olympic distances), 5K and 10K (open water, World Aquatics standard distances), plus a custom distance field. Triathlon distances (Sprint, Olympic, 70.3, Full) are defined separately within the Triathlon calculator, not duplicated here.
+
+**REQUIRES DECISION:** Standard distances for Triathlon — still to be finalised.
 
 ## 10. Functional Requirements
 **CONFIRMED (from brief):**
@@ -131,7 +133,15 @@ Keep this file updated as decisions are confirmed. Paste it into this Project's 
 - Race splits calculated every 10 km/mi (not every 1 km/mi), matching typical cycling pace granularity.
 - All calculations always use the full-precision stored value, never a rounded display value.
 
-**REQUIRES DECISION:** Rounding rules for Swimming and Triathlon — still to be finalised.
+**CONFIRMED, 29 Jul 2026 — Swimming rounding rules:**
+- Pace (per 100m, per 100yd, per 500m): rounded to nearest whole second, displayed m:ss.
+- Time (finish time, splits): rounded to nearest whole second, displayed h:mm:ss (or mm:ss under an hour).
+- Distance: whole metres/yards, no decimal places, for custom distances; standard distances show their label (e.g. "1500m").
+- Pace/500m displays only in metric mode; pace/100yd displays only in imperial mode.
+- Race splits every 100m/100yd for distances up to 1500m; every 500m for 5K/10K.
+- All calculations always use the full-precision stored value, never a rounded display value.
+
+**REQUIRES DECISION:** Rounding rules for Triathlon — still to be finalised.
 
 ## 13. Input, Validation & Rounding Principles
 **CONFIRMED (categories to handle, from your brief):**
@@ -148,6 +158,8 @@ Keep this file updated as decisions are confirmed. Paste it into this Project's 
 **CONFIRMED, 29 Jul 2026 — Impossible time format handling (Running, and default for other calculators unless overridden):** Rejected with an inline error message (e.g. "Seconds must be between 0 and 59") rather than silently auto-corrected. Extremely large values show a soft warning but aren't blocked.
 
 **CONFIRMED, 29 Jul 2026 — Cycling validation:** Inherits Running's confirmed rules — impossible time formats rejected with an inline error message. Extremely large values show a soft warning (not blocked) above roughly 2,000 km or 100 hours, to accommodate legitimate ultra-distance cycling events.
+
+**CONFIRMED, 29 Jul 2026 — Swimming validation:** Inherits Running's confirmed rules — impossible time formats rejected with an inline error message. Extremely large values show a soft warning (not blocked) above roughly 50 km or 24 hours, to accommodate legitimate marathon/channel swims.
 
 ## 14. Accessibility Requirements
 **PROPOSED:**
@@ -278,11 +290,14 @@ Everything else (layout, visual style, colour, typography) is still open and wil
 | 9 | 29 Jul 2026 | Cycling standard distances: 40K, Metric Century, Century + custom | CONFIRMED |
 | 10 | 29 Jul 2026 | Cycling rounding rules (speed to 1 decimal, time to nearest second, splits every 10km/mi) | CONFIRMED |
 | 11 | 29 Jul 2026 | Cycling validation inherits Running's rules, with a higher large-value threshold | CONFIRMED |
+| 12 | 29 Jul 2026 | Swimming standard distances: 400m, 800m, 1500m, 5K, 10K + custom (triathlon distances kept separate) | CONFIRMED |
+| 13 | 29 Jul 2026 | Swimming rounding rules (pace to nearest second, distance whole units, mixed split granularity) | CONFIRMED |
+| 14 | 29 Jul 2026 | Swimming validation inherits Running's rules, with a swim-specific large-value threshold | CONFIRMED |
 
 ## 24. Risks & Unresolved Questions
 **REQUIRES DECISION:**
-1. Standard race distances for Swimming and Triathlon (Section 9) — Running and Cycling resolved 29 Jul 2026.
-2. Rounding rules for Swimming and Triathlon (Section 12/13) — Running and Cycling resolved 29 Jul 2026.
+1. Standard race distances for Triathlon (Section 9) — Running, Cycling, and Swimming resolved 29 Jul 2026.
+2. Rounding rules for Triathlon (Section 12/13) — Running, Cycling, and Swimming resolved 29 Jul 2026.
 3. MVP scope as a whole set (Section 6) still needs an explicit sign-off, even though its individual parts come straight from your brief.
 
 **Lower-priority, can wait:**
