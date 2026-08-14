@@ -1,0 +1,480 @@
+/* ==========================================================================
+   Cardio Pace & Race Calculator — shared stylesheet
+   PROJECT_BIBLE.md references:
+   Section 14 — accessibility (focus states, touch targets, error association)
+   Section 18 — visual design direction (colour tokens, typography, layout,
+                 responsive breakpoints, hero result element)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design tokens
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Colour tokens — light (default) */
+  --bg: #F7F8F9;
+  --surface: #FFFFFF;
+  --text: #14171A;
+  --text-secondary: #5B6168;
+  --border: #D8DBDF;
+  --error: #C6362B;
+
+  /* Activity accent colours — applied sparingly (icons/labels/active states) */
+  --accent-running: #E85D4E;
+  --accent-cycling: #2F8F3E;
+  --accent-swimming: #0E8FA8;
+  --accent-triathlon: #6A4FE0;
+
+  /* Typography */
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Segoe UI Mono", Consolas, "Liberation Mono", Menlo, monospace;
+
+  /* Shape */
+  --radius-card: 20px;
+  --radius-control: 10px;
+  --shadow-card: 0 8px 30px rgba(20, 23, 26, 0.08);
+
+  /* Motion */
+  --transition-fast: 150ms ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121316;
+    --surface: #1B1D21;
+    --text: #F2F3F5;
+    --text-secondary: #9AA0A8;
+    --border: #33363B;
+    --error: #FF6B5E;
+    --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* Scope the active accent colour per activity page */
+.activity-running { --accent: var(--accent-running); }
+.activity-cycling { --accent: var(--accent-cycling); }
+.activity-swimming { --accent: var(--accent-swimming); }
+.activity-triathlon { --accent: var(--accent-triathlon); }
+
+/* --------------------------------------------------------------------------
+   2. Reset & base
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, p {
+  margin: 0;
+}
+
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0; /* prevents fieldset's default min-content width from breaking flex layouts */
+}
+
+legend {
+  padding: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Guards against component rules (e.g. .field { display: flex }) silently
+   overriding the native [hidden] behaviour — author-origin rules beat the
+   UA stylesheet's [hidden] rule regardless of specificity, so this needs
+   !important to reliably win. */
+[hidden] {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. Page shell & responsive breakpoints (Section 18)
+   Mobile   (<640px):  full-bleed, no card framing.
+   Tablet   (640–1023px): centered card, max-width 560px.
+   Desktop  (>=1024px): centered card, max-width 640px, more whitespace.
+   -------------------------------------------------------------------------- */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  padding: 24px 20px 40px;
+}
+
+@media (min-width: 640px) {
+  body {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .page {
+    max-width: 560px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: 32px 28px 36px;
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    padding: 64px 20px;
+  }
+
+  .page {
+    max-width: 640px;
+    padding: 40px 40px 48px;
+    gap: 32px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. Header
+   -------------------------------------------------------------------------- */
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.back-link {
+  align-self: flex-start;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.back-link:hover {
+  color: var(--text);
+}
+
+.page-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   5. Form layout
+   -------------------------------------------------------------------------- */
+
+.calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   6. Segmented control (Solve for / Units)
+   -------------------------------------------------------------------------- */
+
+.segmented-control {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+}
+
+.segmented-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.segmented-label {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: calc(var(--radius-control) - 4px);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.segmented-input:checked + .segmented-label {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 1px 2px rgba(20, 23, 26, 0.12);
+}
+
+.segmented-control-compact {
+  padding: 3px;
+}
+
+.segmented-control-compact .segmented-label {
+  min-height: 36px;
+  min-width: 44px;
+  padding: 6px 10px;
+  font-size: 0.8125rem;
+}
+
+/* --------------------------------------------------------------------------
+   7. Standard distance chips
+   -------------------------------------------------------------------------- */
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  appearance: none;
+  min-height: 44px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.chip:hover {
+  border-color: var(--accent);
+}
+
+.chip[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.chip-custom {
+  border-style: dashed;
+}
+
+/* --------------------------------------------------------------------------
+   8. Fields & inputs
+   -------------------------------------------------------------------------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+input[type="number"] {
+  min-height: 44px;
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1rem;
+  transition: border-color var(--transition-fast);
+}
+
+input[type="number"]:focus-visible {
+  border-color: var(--accent);
+}
+
+.input-with-unit {
+  position: relative;
+  display: flex;
+}
+
+.input-with-unit input {
+  padding-right: 48px;
+}
+
+.input-unit-suffix {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.field-error {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--error);
+}
+
+/* --------------------------------------------------------------------------
+   9. Time input (h / m / s)
+   -------------------------------------------------------------------------- */
+
+.time-input-group {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.time-part {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.time-part label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.time-part input {
+  text-align: center;
+}
+
+.time-separator {
+  padding-bottom: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   10. Hero result (Section 18 signature element)
+   -------------------------------------------------------------------------- */
+
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 32px 20px 36px;
+  background: color-mix(in srgb, var(--text) 5%, var(--surface));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  text-align: center;
+}
+
+.result-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.hero-result {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(3.5rem, 15vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--text);
+}
+
+.result-sublabel {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   11. Accessibility — focus states & reduced motion (Section 14)
+   -------------------------------------------------------------------------- */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+.segmented-input:focus-visible + .segmented-label {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
