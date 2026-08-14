@@ -42,7 +42,7 @@
         </div>
       </fieldset>
 
-      <fieldset class="field-group">
+      <fieldset class="field-group" id="distance-field-group">
         <legend class="section-label">Distance</legend>
 
         <div class="chip-row">
@@ -64,7 +64,24 @@
         </div>
       </fieldset>
 
-      <fieldset class="field-group">
+      <fieldset class="field-group" id="pace-field-group" hidden>
+        <legend class="section-label">Pace <span id="pace-unit-hint">(min/km)</span></legend>
+
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="pace-minutes">min</label>
+            <input type="number" id="pace-minutes" name="pace-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="pace-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="pace-seconds">sec</label>
+            <input type="number" id="pace-seconds" name="pace-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="pace-error">
+          </div>
+        </div>
+        <p class="field-error" id="pace-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group" id="time-field-group">
         <legend class="section-label">Time</legend>
 
         <div class="time-input-group">

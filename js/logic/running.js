@@ -123,6 +123,18 @@ export function formatPaceMinPerMile(secPerMile) {
   return formatMinSec(secPerMile, 'Pace');
 }
 
+// Formats a distance in metres as kilometres, rounded to 2 decimal places (Section 12).
+export function formatDistanceKm(meters) {
+  assertPositive(meters, 'Distance');
+  return metersToKm(meters).toFixed(2);
+}
+
+// Formats a distance in metres as miles, rounded to 2 decimal places (Section 12).
+export function formatDistanceMiles(meters) {
+  assertPositive(meters, 'Distance');
+  return metersToMiles(meters).toFixed(2);
+}
+
 // Formats a total duration as "h:mm:ss" (or "m:ss" under an hour), rounded to the
 // nearest whole second (round-half-up).
 export function formatTime(totalSeconds) {
