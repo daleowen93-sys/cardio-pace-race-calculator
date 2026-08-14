@@ -1,8 +1,8 @@
 # Cardio Pace & Race Calculator — Project Bible
 
 Version: 0.4
-Status: UI/UX & Visual Design direction confirmed — ready for Frontend Development
-Last updated: 30 July 2026
+Status: Frontend Development in progress — Running calculator fully functional (logic + UI, all 3 solve-for modes)
+Last updated: 14 August 2026
 Project Owner (beginner developer, Windows)
 
 ## How to use this document
@@ -326,6 +326,7 @@ Visual design direction, result interaction, Triathlon's solve-for model, and re
 | 19 | 29 Jul 2026 | Result interaction model confirmed: no Calculate button, live-updating results | CONFIRMED |
 | 20 | 29 Jul 2026 | Triathlon solve-for model confirmed: no toggle, always outputs total time from per-leg inputs | CONFIRMED |
 | 21 | 30 Jul 2026 | Responsive breakpoints confirmed: full-bleed mobile, centered card at tablet (640px+) and desktop (1024px+) | CONFIRMED |
+| 22 | 14 Aug 2026 | Running calculator complete: logic module (pace/time/distance/validation/standard distances) and UI (all 3 solve-for modes) built, tested, and verified working | CONFIRMED |
 
 ## 24. Risks & Unresolved Questions
 **REQUIRES DECISION:**
