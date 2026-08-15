@@ -62,6 +62,19 @@
         </div>
       </fieldset>
 
+      <fieldset class="field-group" id="speed-field-group" hidden>
+        <legend class="section-label">Speed <span id="speed-unit-hint">(km/h)</span></legend>
+
+        <div class="field">
+          <label for="speed-input" class="visually-hidden">Speed</label>
+          <div class="input-with-unit">
+            <input type="number" id="speed-input" name="speed" inputmode="decimal" min="0" step="any" aria-describedby="speed-error">
+            <span class="input-unit-suffix" id="speed-unit-suffix" aria-hidden="true">km/h</span>
+          </div>
+        </div>
+        <p class="field-error" id="speed-error" role="alert" hidden></p>
+      </fieldset>
+
       <fieldset class="field-group" id="time-field-group">
         <legend class="section-label">Time</legend>
 
