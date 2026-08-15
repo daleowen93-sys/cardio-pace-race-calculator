@@ -18,6 +18,7 @@
   --text-secondary: #5B6168;
   --border: #D8DBDF;
   --error: #C6362B;
+  --warning: #9A6700;
 
   /* Activity accent colours — applied sparingly (icons/labels/active states) */
   --accent-running: #E85D4E;
@@ -46,6 +47,7 @@
     --text-secondary: #9AA0A8;
     --border: #33363B;
     --error: #FF6B5E;
+    --warning: #F0B429;
     --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.45);
   }
 }
@@ -455,6 +457,15 @@ input[type="number"]:focus-visible {
 .result-sublabel {
   font-size: 0.9375rem;
   color: var(--text-secondary);
+}
+
+/* Section 13: soft warning (extreme values) — visually distinct from .field-error's
+   red, since it doesn't block the calculation, just flags it for a second look. */
+.result-warning {
+  max-width: 32ch;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--warning);
 }
 
 /* --------------------------------------------------------------------------

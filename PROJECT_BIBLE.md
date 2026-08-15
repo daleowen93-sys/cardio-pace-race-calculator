@@ -239,8 +239,9 @@ cardio-pace-race-calculator/
 - Style: clean, minimal, precise — welcoming to beginners and experienced athletes alike.
 - Theme: follows device/system light-dark preference (prefers-color-scheme); no in-app manual toggle in v1.
 - Typography: system font stack for UI text/labels; system monospace (tabular figures) for all numeric results and splits.
-- Colour tokens — Light: background #F7F8F9, surface #FFFFFF, text #14171A, secondary text #5B6168, border #D8DBDF.
-  Dark: background #121316, surface #1B1D21, text #F2F3F5, secondary text #9AA0A8, border #33363B.
+- Colour tokens — Light: background #F7F8F9, surface #FFFFFF, text #14171A, secondary text #5B6168, border #D8DBDF, warning #9A6700.
+  Dark: background #121316, surface #1B1D21, text #F2F3F5, secondary text #9AA0A8, border #33363B, warning #F0B429.
+  The warning token is used for Section 13's "soft warning" (extreme value) states — visually distinct from error red, since it doesn't block the calculation. Introduced for Cycling; reused consistently across all calculators (Swimming and Triathlon to follow).
 - Activity accent colours (used sparingly — icons/labels/buttons, not backgrounds): Running #E85D4E, Cycling #2F8F3E, Swimming #0E8FA8, Triathlon #6A4FE0.
 - Signature element: large bold monospace "hero" result number as the visual focus of every calculator screen.
 - Layout: mobile-first, single-column, full-width tappable activity cards with a representative icon per activity, one primary focus per screen.
@@ -327,6 +328,7 @@ Visual design direction, result interaction, Triathlon's solve-for model, and re
 | 20 | 29 Jul 2026 | Triathlon solve-for model confirmed: no toggle, always outputs total time from per-leg inputs | CONFIRMED |
 | 21 | 30 Jul 2026 | Responsive breakpoints confirmed: full-bleed mobile, centered card at tablet (640px+) and desktop (1024px+) | CONFIRMED |
 | 22 | 14 Aug 2026 | Running calculator complete: logic module (pace/time/distance/validation/standard distances) and UI (all 3 solve-for modes) built, tested, and verified working | CONFIRMED |
+| 23 | 15 Aug 2026 | Added --warning colour token (Light #9A6700, Dark #F0B429) for Section 13 soft-warning states, distinct from error red — introduced for Cycling, to be reused across all calculators | CONFIRMED |
 
 ## 24. Risks & Unresolved Questions
 **REQUIRES DECISION:**
