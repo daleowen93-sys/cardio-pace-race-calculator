@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cycling Calculator — Cardio Pace &amp; Race Calculator</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="activity-cycling">
+  <div class="page">
+    <header class="page-header">
+      <a class="back-link" href="../index.html">&larr; Activities</a>
+      <div class="page-header-row">
+        <h1 class="page-title">Cycling</h1>
+
+        <fieldset class="field-group">
+          <legend class="visually-hidden">Units</legend>
+          <div class="segmented-control segmented-control-compact">
+            <input type="radio" class="segmented-input" id="unit-km" name="unit-system" value="km" checked>
+            <label class="segmented-label" for="unit-km">KM</label>
+
+            <input type="radio" class="segmented-input" id="unit-mi" name="unit-system" value="mi">
+            <label class="segmented-label" for="unit-mi">MI</label>
+          </div>
+        </fieldset>
+      </div>
+    </header>
+
+    <form class="calculator" novalidate>
+
+      <fieldset class="field-group">
+        <legend class="section-label">Solve for</legend>
+        <div class="segmented-control">
+          <input type="radio" class="segmented-input" id="solve-speed" name="solve-for" value="speed" checked>
+          <label class="segmented-label" for="solve-speed">Speed</label>
+
+          <input type="radio" class="segmented-input" id="solve-time" name="solve-for" value="time">
+          <label class="segmented-label" for="solve-time">Time</label>
+
+          <input type="radio" class="segmented-input" id="solve-distance" name="solve-for" value="distance">
+          <label class="segmented-label" for="solve-distance">Distance</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field-group" id="distance-field-group">
+        <legend class="section-label">Distance</legend>
+
+        <div class="chip-row">
+          <button type="button" class="chip" data-distance-meters="40000" aria-pressed="false">40K Time Trial</button>
+          <button type="button" class="chip" data-distance-meters="100000" aria-pressed="true">Metric Century</button>
+          <button type="button" class="chip" data-distance-meters="160934.4" aria-pressed="false">Century</button>
+          <button type="button" class="chip chip-custom" id="chip-custom" aria-expanded="false" aria-controls="custom-distance-field">Custom</button>
+        </div>
+
+        <div class="field custom-distance-field" id="custom-distance-field" hidden>
+          <label for="distance-input">Custom distance</label>
+          <div class="input-with-unit">
+            <input type="number" id="distance-input" name="distance" inputmode="decimal" min="0" step="any" aria-describedby="distance-error">
+            <span class="input-unit-suffix" aria-hidden="true">km</span>
+          </div>
+          <p class="field-error" id="distance-error" role="alert" hidden></p>
+        </div>
+      </fieldset>
+
+      <fieldset class="field-group" id="time-field-group">
+        <legend class="section-label">Time</legend>
+
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="time-hours">h</label>
+            <input type="number" id="time-hours" name="hours" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="time-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="time-minutes">m</label>
+            <input type="number" id="time-minutes" name="minutes" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="time-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="time-seconds">s</label>
+            <input type="number" id="time-seconds" name="seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="time-error">
+          </div>
+        </div>
+        <p class="field-error" id="time-error" role="alert" hidden></p>
+      </fieldset>
+
+      <section class="result" aria-live="polite">
+        <p class="result-label">Speed</p>
+        <p class="hero-result">&ndash;.&ndash;</p>
+        <p class="result-sublabel">km/h</p>
+      </section>
+
+    </form>
+  </div>
+</body>
+</html>
