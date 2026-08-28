@@ -74,7 +74,15 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Swim <span class="leg-distance-badge" id="swim-distance-badge">1500m</span></legend>
-        <div class="time-input-group">
+
+        <div class="segmented-control segmented-control-compact">
+          <input type="radio" class="segmented-input" id="swim-mode-time" name="swim-mode" value="time" checked>
+          <label class="segmented-label" for="swim-mode-time">Time</label>
+          <input type="radio" class="segmented-input" id="swim-mode-pace" name="swim-mode" value="pace">
+          <label class="segmented-label" for="swim-mode-pace">Pace</label>
+        </div>
+
+        <div class="time-input-group" id="swim-time-fields">
           <div class="time-part">
             <label for="swim-hours">h</label>
             <input type="number" id="swim-hours" name="swim-hours" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="swim-time-error">
@@ -90,6 +98,22 @@
             <input type="number" id="swim-seconds" name="swim-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="swim-time-error">
           </div>
         </div>
+
+        <div class="field-group" id="swim-pace-fields" hidden>
+          <p class="section-label" id="swim-pace-unit-hint">Pace (min/100m)</p>
+          <div class="time-input-group">
+            <div class="time-part">
+              <label for="swim-pace-minutes">min</label>
+              <input type="number" id="swim-pace-minutes" name="swim-pace-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="swim-time-error">
+            </div>
+            <span class="time-separator" aria-hidden="true">:</span>
+            <div class="time-part">
+              <label for="swim-pace-seconds">sec</label>
+              <input type="number" id="swim-pace-seconds" name="swim-pace-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="swim-time-error">
+            </div>
+          </div>
+        </div>
+
         <p class="field-error" id="swim-time-error" role="alert" hidden></p>
       </fieldset>
 
@@ -111,7 +135,15 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Bike <span class="leg-distance-badge" id="bike-distance-badge">40km</span></legend>
-        <div class="time-input-group">
+
+        <div class="segmented-control segmented-control-compact">
+          <input type="radio" class="segmented-input" id="bike-mode-time" name="bike-mode" value="time" checked>
+          <label class="segmented-label" for="bike-mode-time">Time</label>
+          <input type="radio" class="segmented-input" id="bike-mode-speed" name="bike-mode" value="speed">
+          <label class="segmented-label" for="bike-mode-speed">Speed</label>
+        </div>
+
+        <div class="time-input-group" id="bike-time-fields">
           <div class="time-part">
             <label for="bike-hours">h</label>
             <input type="number" id="bike-hours" name="bike-hours" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="bike-time-error">
@@ -127,6 +159,15 @@
             <input type="number" id="bike-seconds" name="bike-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="bike-time-error">
           </div>
         </div>
+
+        <div class="field" id="bike-speed-field" hidden>
+          <label for="bike-speed-input">Speed</label>
+          <div class="input-with-unit">
+            <input type="number" id="bike-speed-input" name="bike-speed" inputmode="decimal" min="0" step="any" aria-describedby="bike-time-error">
+            <span class="input-unit-suffix" id="bike-speed-unit-suffix" aria-hidden="true">km/h</span>
+          </div>
+        </div>
+
         <p class="field-error" id="bike-time-error" role="alert" hidden></p>
       </fieldset>
 
@@ -148,7 +189,15 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run <span class="leg-distance-badge" id="run-distance-badge">10km</span></legend>
-        <div class="time-input-group">
+
+        <div class="segmented-control segmented-control-compact">
+          <input type="radio" class="segmented-input" id="run-mode-time" name="run-mode" value="time" checked>
+          <label class="segmented-label" for="run-mode-time">Time</label>
+          <input type="radio" class="segmented-input" id="run-mode-pace" name="run-mode" value="pace">
+          <label class="segmented-label" for="run-mode-pace">Pace</label>
+        </div>
+
+        <div class="time-input-group" id="run-time-fields">
           <div class="time-part">
             <label for="run-hours">h</label>
             <input type="number" id="run-hours" name="run-hours" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run-time-error">
@@ -164,6 +213,22 @@
             <input type="number" id="run-seconds" name="run-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run-time-error">
           </div>
         </div>
+
+        <div class="field-group" id="run-pace-fields" hidden>
+          <p class="section-label" id="run-pace-unit-hint">Pace (min/km)</p>
+          <div class="time-input-group">
+            <div class="time-part">
+              <label for="run-pace-minutes">min</label>
+              <input type="number" id="run-pace-minutes" name="run-pace-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run-time-error">
+            </div>
+            <span class="time-separator" aria-hidden="true">:</span>
+            <div class="time-part">
+              <label for="run-pace-seconds">sec</label>
+              <input type="number" id="run-pace-seconds" name="run-pace-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run-time-error">
+            </div>
+          </div>
+        </div>
+
         <p class="field-error" id="run-time-error" role="alert" hidden></p>
       </fieldset>
 

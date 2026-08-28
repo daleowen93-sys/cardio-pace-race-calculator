@@ -1,14 +1,18 @@
 // DOM/interaction layer for the Triathlon calculator (Section 15/17: UI calls into
 // the pure logic modules and only handles display, input capture, formatting).
 //
-// Unlike Running/Cycling/Swimming, Triathlon has no Pace/Time/Distance solve-for
-// toggle (Section 18): it always takes distance (per leg, standard or custom) and
-// time (or transition time) per leg as inputs, and always outputs total finish
-// time. Distance is captured here purely for the small leg-distance badges shown
-// next to each leg's heading — it is NOT passed into calculateTotalTime, which only
-// sums the five time values (Section 15/17: no duplicated cross-cutting logic —
-// badge formatting reuses formatDistanceKm/Miles from running.js and
-// formatDistanceMeters/Yards from swimming.js rather than reimplementing them).
+// Unlike Running/Cycling/Swimming, Triathlon has no overall Pace/Time/Distance
+// solve-for toggle (Section 18): it always outputs total finish time, never a
+// pace/speed/distance. Each of the three legs, however, has its own Time/Pace
+// (swim, run) or Time/Speed (bike) toggle — Time is the original v1 default; when
+// Pace/Speed is selected, that leg's duration is computed from its distance (the
+// selected standard or custom leg distance) via calculateTime, imported directly
+// from running.js/cycling.js/swimming.js rather than duplicated here (Section
+// 15/17: no duplicated cross-cutting logic between modules) — triathlon.js itself
+// is untouched and still only sums five already-resolved time values. Distance is
+// otherwise only used for the small leg-distance badges shown next to each leg's
+// heading — badge formatting reuses formatDistanceKm/Miles from running.js and
+// formatDistanceMeters/Yards from swimming.js rather than reimplementing them.
 //
 // The global unit toggle here is Metric/Imperial rather than a single specific pair
 // like KM/MI or M/YD, because Triathlon spans BOTH conventions at once per Section 4:
@@ -19,19 +23,21 @@
 // nothing downstream calculates with these values, so the custom fields themselves
 // never silently reinterpret their digits under the new unit.
 //
-// Section 13: swim/bike/run leg times are required (blank on all three of a leg's
-// h/m/s fields means "incomplete", not invalid — placeholder shown, no error).
+// Section 13: swim/bike/run leg durations are required (blank on all three of a
+// leg's h/m/s fields in Time mode, or a blank/incomplete pace/speed field in
+// Pace/Speed mode, means "incomplete", not invalid — placeholder shown, no error).
 // Transition times (T1/T2) are optional: a fully blank transition defaults to zero
 // rather than blocking the calculation, per the confirmed Triathlon validation rule.
-// Genuinely invalid values (zero/negative leg time, negative transition, malformed
-// time components) surface as inline errors under the relevant field.
+// Genuinely invalid values (zero/negative leg time, zero/negative pace or speed,
+// negative transition, malformed time/pace components) surface as inline errors
+// under the relevant field.
 // Section 18: results update live, debounced briefly after the last keystroke.
 
 import { calculateTotalTime, formatTime, TRIATHLON_STANDARD_DISTANCES } from '../logic/triathlon.js';
-import { formatDistanceKm, formatDistanceMiles } from '../logic/running.js';
-import { formatDistanceMeters, formatDistanceYards } from '../logic/swimming.js';
-import { kmToMeters, metersToKm, milesToMeters, metersToMiles, yardsToMeters, metersToYards } from '../logic/unitConversion.js';
-import { prefersImperial } from './unitPreference.js';
+import { calculateTime as calculateRunTime, formatDistanceKm, formatDistanceMiles } from '../logic/running.js';
+import { calculateTime as calculateBikeTime } from '../logic/cycling.js';
+import { calculateTime as calculateSwimTime, formatDistanceMeters, formatDistanceYards } from '../logic/swimming.js';
+import { kmToMeters, metersToKm, milesToMeters, metersToMiles, yardsToMeters, metersToYards, METERS_PER_YARD } from '../logic/unitConversion.js';
 
 const PLACEHOLDER = '–:––:––';
 const DEBOUNCE_MS = 300;
@@ -58,20 +64,37 @@ const runDistanceUnit = document.getElementById('run-distance-unit');
 const runDistanceError = document.getElementById('run-distance-error');
 const runDistanceBadge = document.getElementById('run-distance-badge');
 
+const swimModeRadios = document.querySelectorAll('input[name="swim-mode"]');
+const swimTimeFields = document.getElementById('swim-time-fields');
 const swimHoursInput = document.getElementById('swim-hours');
 const swimMinutesInput = document.getElementById('swim-minutes');
 const swimSecondsInput = document.getElementById('swim-seconds');
 const swimTimeError = document.getElementById('swim-time-error');
+const swimPaceFields = document.getElementById('swim-pace-fields');
+const swimPaceUnitHint = document.getElementById('swim-pace-unit-hint');
+const swimPaceMinutesInput = document.getElementById('swim-pace-minutes');
+const swimPaceSecondsInput = document.getElementById('swim-pace-seconds');
 
+const bikeModeRadios = document.querySelectorAll('input[name="bike-mode"]');
+const bikeTimeFields = document.getElementById('bike-time-fields');
 const bikeHoursInput = document.getElementById('bike-hours');
 const bikeMinutesInput = document.getElementById('bike-minutes');
 const bikeSecondsInput = document.getElementById('bike-seconds');
 const bikeTimeError = document.getElementById('bike-time-error');
+const bikeSpeedField = document.getElementById('bike-speed-field');
+const bikeSpeedInput = document.getElementById('bike-speed-input');
+const bikeSpeedUnitSuffix = document.getElementById('bike-speed-unit-suffix');
 
+const runModeRadios = document.querySelectorAll('input[name="run-mode"]');
+const runTimeFields = document.getElementById('run-time-fields');
 const runHoursInput = document.getElementById('run-hours');
 const runMinutesInput = document.getElementById('run-minutes');
 const runSecondsInput = document.getElementById('run-seconds');
 const runTimeError = document.getElementById('run-time-error');
+const runPaceFields = document.getElementById('run-pace-fields');
+const runPaceUnitHint = document.getElementById('run-pace-unit-hint');
+const runPaceMinutesInput = document.getElementById('run-pace-minutes');
+const runPaceSecondsInput = document.getElementById('run-pace-seconds');
 
 const t1MinutesInput = document.getElementById('t1-minutes');
 const t1SecondsInput = document.getElementById('t1-seconds');
@@ -88,12 +111,6 @@ function getChipDistances(chip) {
   return standard ? { swim: standard.swimMeters, bike: standard.bikeMeters, run: standard.runMeters } : null;
 }
 
-// Section 12: default unit is auto-detected from the browser locale, overriding
-// the static HTML's metric default, before any state is read from the toggle.
-if (prefersImperial()) {
-  document.getElementById('unit-imperial').checked = true;
-}
-
 const initiallySelectedChip = Array.from(standardChips).find((c) => c.getAttribute('aria-pressed') === 'true');
 const initialDistances = initiallySelectedChip ? getChipDistances(initiallySelectedChip) : null;
 
@@ -106,6 +123,27 @@ let swimMeters = initialDistances ? initialDistances.swim : null;
 let bikeMeters = initialDistances ? initialDistances.bike : null;
 let runMeters = initialDistances ? initialDistances.run : null;
 let lastResult = null; // total seconds, or null
+
+// Per-leg input mode: 'time' (direct duration, the original v1 behaviour) or
+// 'pace'/'speed' (compute that leg's duration from its distance + a pace/speed
+// input instead). Section 15/17: the conversion reuses calculateTime from
+// running.js/cycling.js/swimming.js rather than duplicating pace/speed math here
+// — triathlon.js itself is untouched and still only sums five time values.
+let swimMode = 'time';
+let bikeMode = 'time';
+let runMode = 'time';
+
+// Full-precision shadows for the pace/speed inputs, always in a canonical unit
+// (seconds/100m, km/h, seconds/km) regardless of the current Metric/Imperial
+// toggle — same shadow-value pattern as the other calculators. null = untouched.
+let swimPaceSecPer100mFull = null;
+let bikeSpeedKmhFull = null;
+let runPaceSecPerKmFull = null;
+// Set when a pace field's raw min/sec text is genuinely malformed (e.g. seconds
+// >= 60) rather than merely empty — thrown by readSwimDuration/readRunDuration
+// so recalculate() surfaces it under that leg's existing error paragraph.
+let swimPaceSyncError = null;
+let runPaceSyncError = null;
 
 function debounce(fn, delay) {
   let timer = null;
@@ -226,6 +264,125 @@ function syncRunDistanceFromInput() {
   clearFieldError(runDistanceError);
 }
 
+// Combines a pace field's min/sec inputs into a plain number of seconds in the
+// *entered* unit — null if untouched, throws for genuinely malformed component
+// values (Section 13: impossible time formats). Shared by the Swim and Run pace
+// fields, which are identical in shape.
+function combinePaceComponents(minutesInput, secondsInput) {
+  const minutesRaw = minutesInput.value.trim();
+  const secondsRaw = secondsInput.value.trim();
+
+  if (minutesRaw === '' && secondsRaw === '') {
+    return null;
+  }
+
+  const minutes = minutesRaw === '' ? 0 : Number(minutesRaw);
+  const seconds = secondsRaw === '' ? 0 : Number(secondsRaw);
+
+  if (!Number.isFinite(minutes) || !Number.isFinite(seconds)) {
+    throw new Error('Pace minutes and seconds must be numbers');
+  }
+  if (minutes < 0) {
+    throw new Error('Pace minutes must not be negative');
+  }
+  if (seconds < 0 || seconds >= 60) {
+    throw new Error('Pace seconds must be between 0 and 59');
+  }
+
+  return minutes * 60 + seconds;
+}
+
+// Re-derives swimPaceSecPer100mFull from the Swim Pace field, at full precision.
+// Mirrors swimming-ui.js's syncPaceFromInput — pace converts in the OPPOSITE
+// direction to a plain distance (yd -> 100m pace divides, since 100yd is a
+// shorter distance than 100m).
+function syncSwimPaceFromInput() {
+  swimPaceSyncError = null;
+  try {
+    const entered = combinePaceComponents(swimPaceMinutesInput, swimPaceSecondsInput);
+    if (entered === null) {
+      swimPaceSecPer100mFull = null;
+      return;
+    }
+    swimPaceSecPer100mFull = currentUnit === 'metric' ? entered : entered / METERS_PER_YARD;
+  } catch (err) {
+    swimPaceSecPer100mFull = null;
+    swimPaceSyncError = err;
+  }
+}
+
+// Re-derives runPaceSecPerKmFull from the Run Pace field, at full precision.
+// Mirrors running-ui.js's syncPaceFromInput.
+function syncRunPaceFromInput() {
+  runPaceSyncError = null;
+  try {
+    const entered = combinePaceComponents(runPaceMinutesInput, runPaceSecondsInput);
+    if (entered === null) {
+      runPaceSecPerKmFull = null;
+      return;
+    }
+    runPaceSecPerKmFull = currentUnit === 'metric' ? entered : entered * metersToMiles(1000);
+  } catch (err) {
+    runPaceSecPerKmFull = null;
+    runPaceSyncError = err;
+  }
+}
+
+// Re-derives bikeSpeedKmhFull from the Bike Speed field, at full precision.
+// Mirrors cycling-ui.js's syncSpeedFromInput.
+function syncBikeSpeedFromInput() {
+  const raw = bikeSpeedInput.value.trim();
+  if (raw === '') {
+    bikeSpeedKmhFull = null;
+    return;
+  }
+  const value = Number(raw);
+  if (!Number.isFinite(value)) {
+    bikeSpeedKmhFull = null;
+    return;
+  }
+  bikeSpeedKmhFull = currentUnit === 'metric' ? value : metersToKm(milesToMeters(value));
+}
+
+// Re-renders the Swim/Run pace fields' displayed text (nearest whole second) and
+// the Bike speed field's displayed text (1dp) from their full-precision shadows,
+// in the current unit. Never touches the shadows.
+function refreshSwimPaceDisplay() {
+  if (swimPaceSecPer100mFull === null) {
+    return;
+  }
+  const displaySeconds = currentUnit === 'metric' ? swimPaceSecPer100mFull : swimPaceSecPer100mFull * METERS_PER_YARD;
+  const rounded = Math.round(displaySeconds);
+  swimPaceMinutesInput.value = Math.floor(rounded / 60);
+  swimPaceSecondsInput.value = rounded % 60;
+}
+
+function refreshRunPaceDisplay() {
+  if (runPaceSecPerKmFull === null) {
+    return;
+  }
+  const displaySeconds = currentUnit === 'metric' ? runPaceSecPerKmFull : runPaceSecPerKmFull / metersToMiles(1000);
+  const rounded = Math.round(displaySeconds);
+  runPaceMinutesInput.value = Math.floor(rounded / 60);
+  runPaceSecondsInput.value = rounded % 60;
+}
+
+function refreshBikeSpeedDisplay() {
+  if (bikeSpeedKmhFull === null) {
+    return;
+  }
+  const value = currentUnit === 'metric' ? bikeSpeedKmhFull : metersToMiles(kmToMeters(bikeSpeedKmhFull));
+  bikeSpeedInput.value = value.toFixed(1);
+}
+
+// Updates the pace/speed fields' unit-dependent labels — called both at init and
+// on every unit toggle, so a field never shows stale-unit text (Section 12).
+function updateLegUnitLabels() {
+  swimPaceUnitHint.textContent = currentUnit === 'metric' ? 'Pace (min/100m)' : 'Pace (min/100yd)';
+  runPaceUnitHint.textContent = currentUnit === 'metric' ? 'Pace (min/km)' : 'Pace (min/mi)';
+  bikeSpeedUnitSuffix.textContent = currentUnit === 'metric' ? 'km/h' : 'mph';
+}
+
 // Re-renders a custom distance field's displayed text from its full-precision
 // shadow, in the current unit. Never touches the shadow.
 function refreshCustomDistanceDisplays() {
@@ -277,22 +434,93 @@ function readTransition(minutesInput, secondsInput) {
   };
 }
 
-function clearAllTimeErrors() {
-  [swimTimeError, t1Error, bikeTimeError, t2Error, runTimeError].forEach(clearFieldError);
-}
-
 function renderResult() {
   heroResult.textContent = lastResult === null ? PLACEHOLDER : formatTime(lastResult);
 }
 
+// Returns this leg's duration — a { hours, minutes, seconds } object in 'time'
+// mode (unchanged v1 behaviour), or a plain number of seconds computed from
+// distance + pace/speed in 'pace'/'speed' mode — or null if incomplete. Throws
+// for a genuinely invalid pace/speed (Section 13), which recalculate() catches
+// and routes to this leg's own error paragraph.
+function readSwimDuration() {
+  if (swimMode === 'time') {
+    return readLegDuration(swimHoursInput, swimMinutesInput, swimSecondsInput);
+  }
+  if (swimPaceSyncError) {
+    throw swimPaceSyncError;
+  }
+  if (swimMeters === null || swimPaceSecPer100mFull === null) {
+    return null;
+  }
+  return calculateSwimTime(swimMeters, swimPaceSecPer100mFull);
+}
+
+function readBikeDuration() {
+  if (bikeMode === 'time') {
+    return readLegDuration(bikeHoursInput, bikeMinutesInput, bikeSecondsInput);
+  }
+  if (bikeMeters === null || bikeSpeedKmhFull === null) {
+    return null;
+  }
+  return calculateBikeTime(bikeMeters, bikeSpeedKmhFull);
+}
+
+function readRunDuration() {
+  if (runMode === 'time') {
+    return readLegDuration(runHoursInput, runMinutesInput, runSecondsInput);
+  }
+  if (runPaceSyncError) {
+    throw runPaceSyncError;
+  }
+  if (runMeters === null || runPaceSecPerKmFull === null) {
+    return null;
+  }
+  return calculateRunTime(runMeters, runPaceSecPerKmFull);
+}
+
 function recalculate() {
-  const swimDuration = readLegDuration(swimHoursInput, swimMinutesInput, swimSecondsInput);
-  const bikeDuration = readLegDuration(bikeHoursInput, bikeMinutesInput, bikeSecondsInput);
-  const runDuration = readLegDuration(runHoursInput, runMinutesInput, runSecondsInput);
+  let swimDuration = null;
+  let bikeDuration = null;
+  let runDuration = null;
+  let hasLegError = false;
+
+  try {
+    swimDuration = readSwimDuration();
+    clearFieldError(swimTimeError);
+  } catch (err) {
+    showFieldError(swimTimeError, err.message);
+    hasLegError = true;
+  }
+
+  try {
+    bikeDuration = readBikeDuration();
+    clearFieldError(bikeTimeError);
+  } catch (err) {
+    showFieldError(bikeTimeError, err.message);
+    hasLegError = true;
+  }
+
+  try {
+    runDuration = readRunDuration();
+    clearFieldError(runTimeError);
+  } catch (err) {
+    showFieldError(runTimeError, err.message);
+    hasLegError = true;
+  }
+
+  if (hasLegError) {
+    lastResult = null;
+    clearFieldError(t1Error);
+    clearFieldError(t2Error);
+    renderResult();
+    return;
+  }
 
   if (swimDuration === null || bikeDuration === null || runDuration === null) {
     lastResult = null;
-    clearAllTimeErrors();
+    clearFieldError(t1Error);
+    clearFieldError(t2Error);
     renderResult();
     return;
   }
@@ -302,7 +530,8 @@ function recalculate() {
 
   try {
     lastResult = calculateTotalTime({ swimTime: swimDuration, t1Time: t1, bikeTime: bikeDuration, t2Time: t2, runTime: runDuration });
-    clearAllTimeErrors();
+    clearFieldError(t1Error);
+    clearFieldError(t2Error);
   } catch (err) {
     lastResult = null;
     routeError(err, [
@@ -318,6 +547,42 @@ function recalculate() {
 }
 
 const debouncedRecalculate = debounce(recalculate, DEBOUNCE_MS);
+
+function setSwimMode(mode) {
+  swimMode = mode;
+  swimTimeFields.hidden = mode === 'pace';
+  swimPaceFields.hidden = mode === 'time';
+  clearFieldError(swimTimeError);
+  recalculate();
+}
+
+function setBikeMode(mode) {
+  bikeMode = mode;
+  bikeTimeFields.hidden = mode === 'speed';
+  bikeSpeedField.hidden = mode === 'time';
+  clearFieldError(bikeTimeError);
+  recalculate();
+}
+
+function setRunMode(mode) {
+  runMode = mode;
+  runTimeFields.hidden = mode === 'pace';
+  runPaceFields.hidden = mode === 'time';
+  clearFieldError(runTimeError);
+  recalculate();
+}
+
+swimModeRadios.forEach((radio) => {
+  radio.addEventListener('change', () => setSwimMode(radio.value));
+});
+
+bikeModeRadios.forEach((radio) => {
+  radio.addEventListener('change', () => setBikeMode(radio.value));
+});
+
+runModeRadios.forEach((radio) => {
+  radio.addEventListener('change', () => setRunMode(radio.value));
+});
 
 standardChips.forEach((chip) => {
   chip.addEventListener('click', () => {
@@ -380,6 +645,13 @@ unitRadios.forEach((radio) => {
       updateBadges();
     }
 
+    // Re-render from the (unchanged) full-precision shadows — never re-derive them
+    // from the rounded displayed text. See the sync/refresh functions above.
+    refreshSwimPaceDisplay();
+    refreshBikeSpeedDisplay();
+    refreshRunPaceDisplay();
+    updateLegUnitLabels();
+
     recalculate();
   });
 });
@@ -399,6 +671,25 @@ runDistanceInput.addEventListener('input', () => {
   debouncedRecalculate();
 });
 
+[swimPaceMinutesInput, swimPaceSecondsInput].forEach((input) => {
+  input.addEventListener('input', () => {
+    syncSwimPaceFromInput();
+    debouncedRecalculate();
+  });
+});
+
+bikeSpeedInput.addEventListener('input', () => {
+  syncBikeSpeedFromInput();
+  debouncedRecalculate();
+});
+
+[runPaceMinutesInput, runPaceSecondsInput].forEach((input) => {
+  input.addEventListener('input', () => {
+    syncRunPaceFromInput();
+    debouncedRecalculate();
+  });
+});
+
 [
   swimHoursInput, swimMinutesInput, swimSecondsInput,
   bikeHoursInput, bikeMinutesInput, bikeSecondsInput,
@@ -414,5 +705,6 @@ form.addEventListener('submit', (e) => e.preventDefault());
 swimDistanceUnit.textContent = currentUnit === 'metric' ? 'm' : 'yd';
 bikeDistanceUnit.textContent = currentUnit === 'metric' ? 'km' : 'mi';
 runDistanceUnit.textContent = currentUnit === 'metric' ? 'km' : 'mi';
+updateLegUnitLabels();
 updateBadges();
 recalculate();
