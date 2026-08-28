@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Triathlon Calculator — Cardio Pace &amp; Race Calculator</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="activity-triathlon">
+  <div class="page">
+    <header class="page-header">
+      <a class="back-link" href="../index.html">&larr; Activities</a>
+      <div class="page-header-row">
+        <h1 class="page-title">Triathlon</h1>
+
+        <fieldset class="field-group">
+          <legend class="visually-hidden">Units</legend>
+          <div class="segmented-control segmented-control-compact">
+            <input type="radio" class="segmented-input" id="unit-metric" name="unit-system" value="metric" checked>
+            <label class="segmented-label" for="unit-metric">Metric</label>
+
+            <input type="radio" class="segmented-input" id="unit-imperial" name="unit-system" value="imperial">
+            <label class="segmented-label" for="unit-imperial">Imperial</label>
+          </div>
+        </fieldset>
+      </div>
+    </header>
+
+    <form class="calculator" novalidate>
+
+      <fieldset class="field-group" id="distance-field-group">
+        <legend class="section-label">Distance</legend>
+
+        <div class="chip-row">
+          <button type="button" class="chip" data-swim-meters="750" data-bike-meters="20000" data-run-meters="5000" aria-pressed="false">Sprint</button>
+          <button type="button" class="chip" data-swim-meters="1500" data-bike-meters="40000" data-run-meters="10000" aria-pressed="true">Olympic</button>
+          <button type="button" class="chip" data-swim-meters="2000" data-bike-meters="80000" data-run-meters="18000" aria-pressed="false">T100</button>
+          <button type="button" class="chip" data-swim-meters="1900" data-bike-meters="90000" data-run-meters="21097.5" aria-pressed="false">Half Distance</button>
+          <button type="button" class="chip" data-swim-meters="3800" data-bike-meters="180000" data-run-meters="42195" aria-pressed="false">Full Distance</button>
+          <button type="button" class="chip chip-custom" id="chip-custom" aria-expanded="false" aria-controls="custom-distance-fields">Custom</button>
+        </div>
+
+        <fieldset class="field-group custom-distance-fields" id="custom-distance-fields" hidden>
+          <legend class="visually-hidden">Custom leg distances</legend>
+
+          <div class="field">
+            <label for="swim-distance-input">Swim distance</label>
+            <div class="input-with-unit">
+              <input type="number" id="swim-distance-input" name="swim-distance" inputmode="decimal" min="0" step="any" aria-describedby="swim-distance-error">
+              <span class="input-unit-suffix" id="swim-distance-unit" aria-hidden="true">m</span>
+            </div>
+            <p class="field-error" id="swim-distance-error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="bike-distance-input">Bike distance</label>
+            <div class="input-with-unit">
+              <input type="number" id="bike-distance-input" name="bike-distance" inputmode="decimal" min="0" step="any" aria-describedby="bike-distance-error">
+              <span class="input-unit-suffix" id="bike-distance-unit" aria-hidden="true">km</span>
+            </div>
+            <p class="field-error" id="bike-distance-error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="run-distance-input">Run distance</label>
+            <div class="input-with-unit">
+              <input type="number" id="run-distance-input" name="run-distance" inputmode="decimal" min="0" step="any" aria-describedby="run-distance-error">
+              <span class="input-unit-suffix" id="run-distance-unit" aria-hidden="true">km</span>
+            </div>
+            <p class="field-error" id="run-distance-error" role="alert" hidden></p>
+          </div>
+        </fieldset>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Swim <span class="leg-distance-badge" id="swim-distance-badge">1500m</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="swim-hours">h</label>
+            <input type="number" id="swim-hours" name="swim-hours" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="swim-time-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="swim-minutes">m</label>
+            <input type="number" id="swim-minutes" name="swim-minutes" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="swim-time-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="swim-seconds">s</label>
+            <input type="number" id="swim-seconds" name="swim-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="swim-time-error">
+          </div>
+        </div>
+        <p class="field-error" id="swim-time-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group transition-group">
+        <legend class="section-label">T1 <span class="transition-hint">(Swim &rarr; Bike)</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="t1-minutes">m</label>
+            <input type="number" id="t1-minutes" name="t1-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="t1-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="t1-seconds">s</label>
+            <input type="number" id="t1-seconds" name="t1-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="t1-error">
+          </div>
+        </div>
+        <p class="field-error" id="t1-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Bike <span class="leg-distance-badge" id="bike-distance-badge">40km</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="bike-hours">h</label>
+            <input type="number" id="bike-hours" name="bike-hours" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="bike-time-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="bike-minutes">m</label>
+            <input type="number" id="bike-minutes" name="bike-minutes" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="bike-time-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="bike-seconds">s</label>
+            <input type="number" id="bike-seconds" name="bike-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="bike-time-error">
+          </div>
+        </div>
+        <p class="field-error" id="bike-time-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group transition-group">
+        <legend class="section-label">T2 <span class="transition-hint">(Bike &rarr; Run)</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="t2-minutes">m</label>
+            <input type="number" id="t2-minutes" name="t2-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="t2-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="t2-seconds">s</label>
+            <input type="number" id="t2-seconds" name="t2-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="t2-error">
+          </div>
+        </div>
+        <p class="field-error" id="t2-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Run <span class="leg-distance-badge" id="run-distance-badge">10km</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="run-hours">h</label>
+            <input type="number" id="run-hours" name="run-hours" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run-time-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="run-minutes">m</label>
+            <input type="number" id="run-minutes" name="run-minutes" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run-time-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="run-seconds">s</label>
+            <input type="number" id="run-seconds" name="run-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run-time-error">
+          </div>
+        </div>
+        <p class="field-error" id="run-time-error" role="alert" hidden></p>
+      </fieldset>
+
+      <section class="result" aria-live="polite">
+        <p class="result-label">Total Time</p>
+        <p class="hero-result">&ndash;:&ndash;&ndash;:&ndash;&ndash;</p>
+      </section>
+
+    </form>
+  </div>
+
+  <script type="module" src="../js/ui/triathlon-ui.js"></script>
+</body>
+</html>

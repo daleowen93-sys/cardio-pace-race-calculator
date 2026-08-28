@@ -1,8 +1,8 @@
 # Cardio Pace & Race Calculator — Project Bible
 
 Version: 0.4
-Status: Frontend Development in progress — Running calculator fully functional (logic + UI, all 3 solve-for modes)
-Last updated: 14 August 2026
+Status: Frontend Development complete — all four calculators (Running, Cycling, Swimming, Triathlon) fully functional (logic + UI)
+Last updated: 29 August 2026
 Project Owner (beginner developer, Windows)
 
 ## How to use this document
@@ -328,6 +328,7 @@ Visual design direction, result interaction, Triathlon's solve-for model, and re
 | 20 | 29 Jul 2026 | Triathlon solve-for model confirmed: no toggle, always outputs total time from per-leg inputs | CONFIRMED |
 | 21 | 30 Jul 2026 | Responsive breakpoints confirmed: full-bleed mobile, centered card at tablet (640px+) and desktop (1024px+) | CONFIRMED |
 | 22 | 14 Aug 2026 | Running calculator complete: logic module (pace/time/distance/validation/standard distances) and UI (all 3 solve-for modes) built, tested, and verified working | CONFIRMED |
+| 23 | 29 Aug 2026 | Triathlon calculator complete: logic module (total time from per-leg times + transitions, standard distances) and UI (distance chips across all 3 legs, per-leg time inputs, T1/T2 transitions, mixed Metric/Imperial toggle) built, tested, and verified working | CONFIRMED |
 | 23 | 15 Aug 2026 | Added --warning colour token (Light #9A6700, Dark #F0B429) for Section 13 soft-warning states, distinct from error red — introduced for Cycling, to be reused across all calculators | CONFIRMED |
 
 ## 24. Risks & Unresolved Questions
@@ -340,7 +341,7 @@ Standard race distances and rounding rules are now confirmed for all four calcul
 - Whether v1 should be a Progressive Web App (offline support) — currently out of scope unless you want to add it.
 
 ## 25. Current Project Status
-Version 0.3 of the Project Bible. Technology stack, global unit-toggle behaviour, and default-unit detection are confirmed. Phase 0 (setup) is complete: GitHub repository cardio-pace-race-calculator created under account da1eowen93-sys, connected via GitHub Desktop, folder/file skeleton scaffolded per Section 17, and pushed to GitHub.com — verified 22 Jul 2026. No application code has been written yet (all scaffolded files are intentionally empty). Standard race distances, per-calculator rounding rules, and input validation for all four calculators (Running, Cycling, Swimming, Triathlon) are now fully confirmed — verified 29 Jul 2026. The next phase is UI/UX & Visual Design, to establish layout, colour, and typography before any code is written. UI/UX & Visual Design direction — visual style, typography, colour tokens, result interaction model, Triathlon's solve-for model, and responsive breakpoints — is now fully confirmed, verified 30 Jul 2026, via an interactive mockup reviewed across mobile, tablet, and desktop. No production application code has been written yet. The next phase is Frontend Development, beginning with the Running calculator per the locked build order in Section 22.
+Version 0.3 of the Project Bible. Technology stack, global unit-toggle behaviour, and default-unit detection are confirmed. Phase 0 (setup) is complete: GitHub repository cardio-pace-race-calculator created under account da1eowen93-sys, connected via GitHub Desktop, folder/file skeleton scaffolded per Section 17, and pushed to GitHub.com — verified 22 Jul 2026. No application code has been written yet (all scaffolded files are intentionally empty). Standard race distances, per-calculator rounding rules, and input validation for all four calculators (Running, Cycling, Swimming, Triathlon) are now fully confirmed — verified 29 Jul 2026. The next phase is UI/UX & Visual Design, to establish layout, colour, and typography before any code is written. UI/UX & Visual Design direction — visual style, typography, colour tokens, result interaction model, Triathlon's solve-for model, and responsive breakpoints — is now fully confirmed, verified 30 Jul 2026, via an interactive mockup reviewed across mobile, tablet, and desktop. No production application code has been written yet. The next phase is Frontend Development, beginning with the Running calculator per the locked build order in Section 22. Frontend Development is now complete for all four calculators — Running, Cycling, Swimming, and Triathlon each have a working logic module and a fully wired UI, verified 29 Aug 2026. The next phase per Section 22 is a full responsive/accessibility polish pass across all four, followed by testing & QA and deployment.
 
 ## 26. Future Roadmap
 **FUTURE IDEA (not part of v1, listed here only to keep architecture expansion-friendly):**

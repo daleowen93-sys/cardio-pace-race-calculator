@@ -216,6 +216,24 @@ button {
   color: var(--text-secondary);
 }
 
+/* Triathlon-only: a small pill next to a leg's heading (e.g. "SWIM 1500M") showing
+   its current distance, and a muted inline hint next to a transition's heading
+   (e.g. "T1 (SWIM -> BIKE)") — both inherit .section-label's type styling. */
+.leg-distance-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+.transition-hint {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
