@@ -459,6 +459,30 @@ input[type="number"]:focus-visible {
   color: var(--text-secondary);
 }
 
+/* Swimming-only: a secondary pace readout (e.g. pace/500m) shown alongside the
+   main hero pace, metric mode only — a smaller companion stat, not a second hero. */
+.result-secondary {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 0.9375rem;
+}
+
+.result-secondary-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.result-secondary-label {
+  color: var(--text-secondary);
+}
+
 /* Section 13: soft warning (extreme values) — visually distinct from .field-error's
    red, since it doesn't block the calculation, just flags it for a second look. */
 .result-warning {
