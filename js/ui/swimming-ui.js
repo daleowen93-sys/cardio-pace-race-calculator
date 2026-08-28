@@ -66,7 +66,6 @@ import {
   SWIMMING_STANDARD_DISTANCES
 } from '../logic/swimming.js';
 import { yardsToMeters, metersToYards, METERS_PER_YARD } from '../logic/unitConversion.js';
-import { prefersImperial } from './unitPreference.js';
 
 const PLACEHOLDER = '–:––';
 const DEBOUNCE_MS = 300;
@@ -109,12 +108,6 @@ function getChipDistanceMeters(chip) {
 }
 
 const initiallySelectedChip = Array.from(standardChips).find((c) => c.getAttribute('aria-pressed') === 'true');
-
-// Section 12: default unit is auto-detected from the browser locale, overriding
-// the static HTML's metric default, before any state is read from the toggle.
-if (prefersImperial()) {
-  document.getElementById('unit-yd').checked = true;
-}
 
 function updateUnitLabels() {
   distanceUnitSuffix.textContent = currentUnit;
