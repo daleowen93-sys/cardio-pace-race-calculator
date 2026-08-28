@@ -47,6 +47,7 @@ import {
   formatTime,
   formatDistanceKm,
   formatDistanceMiles,
+  isExtremeValue,
   RUNNING_STANDARD_DISTANCES
 } from '../logic/running.js';
 import { kmToMeters, milesToMeters, metersToKm, metersToMiles } from '../logic/unitConversion.js';
@@ -54,6 +55,7 @@ import { prefersImperial } from './unitPreference.js';
 
 const PLACEHOLDER = '–:––';
 const DEBOUNCE_MS = 300;
+const EXTREME_WARNING_MESSAGE = "That's an extreme distance/duration — double check your inputs.";
 
 const form = document.querySelector('.calculator');
 const unitRadios = document.querySelectorAll('input[name="unit-system"]');
@@ -82,6 +84,7 @@ const timeError = document.getElementById('time-error');
 const resultLabel = document.querySelector('.result-label');
 const heroResult = document.querySelector('.hero-result');
 const resultSublabel = document.querySelector('.result-sublabel');
+const extremeWarning = document.getElementById('extreme-warning');
 
 function getChipDistanceMeters(chip) {
   const standard = RUNNING_STANDARD_DISTANCES.find((d) => d.label === chip.textContent.trim());
@@ -132,6 +135,11 @@ function showFieldError(el, message) {
 function clearFieldError(el) {
   el.textContent = '';
   el.hidden = true;
+}
+
+function showWarning(show) {
+  extremeWarning.textContent = show ? EXTREME_WARNING_MESSAGE : '';
+  extremeWarning.hidden = !show;
 }
 
 // Shows `message` under the field whose label prefixes err.message, clears the other(s).
@@ -285,6 +293,7 @@ function recalculatePace() {
     lastResult = null;
     clearFieldError(distanceError);
     clearFieldError(timeError);
+    showWarning(false);
     renderResult();
     return;
   }
@@ -293,8 +302,10 @@ function recalculatePace() {
     lastResult = calculatePace(distance, duration);
     clearFieldError(distanceError);
     clearFieldError(timeError);
+    showWarning(isExtremeValue(distance, duration));
   } catch (err) {
     lastResult = null;
+    showWarning(false);
     routeError(err, [['Distance', distanceError], ['Duration', timeError]]);
   }
 
@@ -304,6 +315,7 @@ function recalculatePace() {
 function recalculateTime() {
   if (paceSyncError) {
     lastResult = null;
+    showWarning(false);
     routeError(paceSyncError, [['Distance', distanceError], ['Pace', paceError]]);
     renderResult();
     return;
@@ -316,6 +328,7 @@ function recalculateTime() {
     lastResult = null;
     clearFieldError(distanceError);
     clearFieldError(paceError);
+    showWarning(false);
     renderResult();
     return;
   }
@@ -324,8 +337,10 @@ function recalculateTime() {
     lastResult = calculateTime(distance, pace);
     clearFieldError(distanceError);
     clearFieldError(paceError);
+    showWarning(isExtremeValue(distance, lastResult));
   } catch (err) {
     lastResult = null;
+    showWarning(false);
     routeError(err, [['Distance', distanceError], ['Pace', paceError]]);
   }
 
@@ -335,6 +350,7 @@ function recalculateTime() {
 function recalculateDistance() {
   if (paceSyncError) {
     lastResult = null;
+    showWarning(false);
     routeError(paceSyncError, [['Duration', timeError], ['Pace', paceError]]);
     renderResult();
     return;
@@ -347,6 +363,7 @@ function recalculateDistance() {
     lastResult = null;
     clearFieldError(timeError);
     clearFieldError(paceError);
+    showWarning(false);
     renderResult();
     return;
   }
@@ -355,8 +372,10 @@ function recalculateDistance() {
     lastResult = calculateDistance(duration, pace);
     clearFieldError(timeError);
     clearFieldError(paceError);
+    showWarning(isExtremeValue(lastResult, duration));
   } catch (err) {
     lastResult = null;
+    showWarning(false);
     routeError(err, [['Duration', timeError], ['Pace', paceError]]);
   }
 
@@ -388,6 +407,7 @@ function setMode(mode) {
   clearFieldError(distanceError);
   clearFieldError(timeError);
   clearFieldError(paceError);
+  showWarning(false);
 
   recalculate();
 }

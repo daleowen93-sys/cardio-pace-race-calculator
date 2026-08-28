@@ -9,6 +9,7 @@ import {
   formatDistanceKm,
   formatDistanceMiles,
   formatTime,
+  isExtremeValue,
   RUNNING_STANDARD_DISTANCES
 } from '../js/logic/running.js';
 
@@ -133,5 +134,28 @@ describe('validation — Section 13', () => {
   test('accepts a duration object with omitted fields (defaults to 0)', () => {
     const result = calculatePace(5000, { minutes: 20 });
     expect(result.secPerKm).toBe(240);
+  });
+});
+
+describe('isExtremeValue — Section 13 soft-warning thresholds (500km / 48h)', () => {
+  test('flags distance just over 500km', () => {
+    expect(isExtremeValue(500001, 1)).toBe(true);
+  });
+
+  test('flags duration just over 48h', () => {
+    expect(isExtremeValue(1, 48 * 3600 + 1)).toBe(true);
+  });
+
+  test('does not flag a marathon in elite time', () => {
+    expect(isExtremeValue(42195, 7200)).toBe(false);
+  });
+
+  test('does not flag exactly at the thresholds', () => {
+    expect(isExtremeValue(500 * 1000, 48 * 3600)).toBe(false);
+  });
+
+  test('accepts a duration object, not just plain seconds', () => {
+    expect(isExtremeValue(42195, { hours: 2 })).toBe(false);
+    expect(isExtremeValue(42195, { hours: 49 })).toBe(true);
   });
 });

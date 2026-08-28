@@ -15,6 +15,12 @@ export const RUNNING_STANDARD_DISTANCES = [
   { label: 'Marathon', meters: 42195 }
 ];
 
+// Section 13: soft-warning thresholds. 500km comfortably clears even elite 24-hour
+// ultra records (~319km); 48 hours comfortably clears standard 24-hour races while
+// still flagging genuinely extreme multi-day inputs.
+const EXTREME_DISTANCE_METERS = 500 * 1000;
+const EXTREME_DURATION_SECONDS = 48 * 3600;
+
 // Accepts either a plain number of seconds, or a { hours, minutes, seconds } object.
 // Object form is validated strictly (Section 13: impossible time formats are rejected).
 function toTotalSeconds(input, label) {
@@ -111,6 +117,28 @@ export function calculateDistance(durationSeconds, paceSecPerKm) {
   const pace = toPaceSeconds(paceSecPerKm);
 
   return kmToMeters(totalSeconds / pace);
+}
+
+// distanceMeters/durationSeconds: the same (distance, duration) pair a scenario
+// represents, regardless of which one was the solved-for output. Returns true if
+// either exceeds the plausible-for-a-single-run threshold (Section 13: soft warning,
+// not blocking).
+export function isExtremeValue(distanceMeters, durationSeconds) {
+  const distanceExtreme = typeof distanceMeters === 'number'
+    && Number.isFinite(distanceMeters)
+    && distanceMeters > EXTREME_DISTANCE_METERS;
+
+  let totalSeconds = null;
+  try {
+    totalSeconds = toTotalSeconds(durationSeconds, 'Duration');
+  } catch {
+    totalSeconds = null;
+  }
+  const durationExtreme = typeof totalSeconds === 'number'
+    && Number.isFinite(totalSeconds)
+    && totalSeconds > EXTREME_DURATION_SECONDS;
+
+  return distanceExtreme || durationExtreme;
 }
 
 // Formats a seconds/km pace as "m:ss", rounded to the nearest whole second (round-half-up).
