@@ -259,6 +259,18 @@ button {
   color: var(--text-secondary);
 }
 
+/* Triathlon-only: shows a leg's computed time under its Pace/Speed input, so
+   switching away from direct Time entry doesn't hide what that leg actually
+   costs — reuses .result-secondary-label/value's label+value styling without
+   that component's divider/centering (this sits inline within a leg, not below
+   the whole result). */
+.leg-time-readout {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 0.875rem;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

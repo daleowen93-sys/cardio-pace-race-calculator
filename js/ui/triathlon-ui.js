@@ -74,6 +74,8 @@ const swimPaceFields = document.getElementById('swim-pace-fields');
 const swimPaceUnitHint = document.getElementById('swim-pace-unit-hint');
 const swimPaceMinutesInput = document.getElementById('swim-pace-minutes');
 const swimPaceSecondsInput = document.getElementById('swim-pace-seconds');
+const swimTimeReadout = document.getElementById('swim-time-readout');
+const swimTimeValue = document.getElementById('swim-time-value');
 
 const bikeModeRadios = document.querySelectorAll('input[name="bike-mode"]');
 const bikeTimeFields = document.getElementById('bike-time-fields');
@@ -84,6 +86,8 @@ const bikeTimeError = document.getElementById('bike-time-error');
 const bikeSpeedField = document.getElementById('bike-speed-field');
 const bikeSpeedInput = document.getElementById('bike-speed-input');
 const bikeSpeedUnitSuffix = document.getElementById('bike-speed-unit-suffix');
+const bikeTimeReadout = document.getElementById('bike-time-readout');
+const bikeTimeValue = document.getElementById('bike-time-value');
 
 const runModeRadios = document.querySelectorAll('input[name="run-mode"]');
 const runTimeFields = document.getElementById('run-time-fields');
@@ -95,6 +99,8 @@ const runPaceFields = document.getElementById('run-pace-fields');
 const runPaceUnitHint = document.getElementById('run-pace-unit-hint');
 const runPaceMinutesInput = document.getElementById('run-pace-minutes');
 const runPaceSecondsInput = document.getElementById('run-pace-seconds');
+const runTimeReadout = document.getElementById('run-time-readout');
+const runTimeValue = document.getElementById('run-time-value');
 
 const t1MinutesInput = document.getElementById('t1-minutes');
 const t1SecondsInput = document.getElementById('t1-seconds');
@@ -438,6 +444,26 @@ function renderResult() {
   heroResult.textContent = lastResult === null ? PLACEHOLDER : formatTime(lastResult);
 }
 
+// Shows this leg's own computed time under its Pace/Speed input — only in
+// Pace/Speed mode, since in Time mode the time IS the input, already visible in
+// the h/m/s fields above. `duration` is whatever readSwimDuration (etc.) returned:
+// a plain number of seconds, a { hours, minutes, seconds } object, or null.
+function renderLegTime(readoutEl, valueEl, mode, duration) {
+  if (mode === 'time' || duration === null) {
+    readoutEl.hidden = true;
+    return;
+  }
+  const seconds = typeof duration === 'number'
+    ? duration
+    : duration.hours * 3600 + duration.minutes * 60 + duration.seconds;
+  if (!Number.isFinite(seconds) || seconds <= 0) {
+    readoutEl.hidden = true;
+    return;
+  }
+  valueEl.textContent = formatTime(seconds);
+  readoutEl.hidden = false;
+}
+
 // Returns this leg's duration — a { hours, minutes, seconds } object in 'time'
 // mode (unchanged v1 behaviour), or a plain number of seconds computed from
 // distance + pace/speed in 'pace'/'speed' mode — or null if incomplete. Throws
@@ -488,24 +514,30 @@ function recalculate() {
   try {
     swimDuration = readSwimDuration();
     clearFieldError(swimTimeError);
+    renderLegTime(swimTimeReadout, swimTimeValue, swimMode, swimDuration);
   } catch (err) {
     showFieldError(swimTimeError, err.message);
+    renderLegTime(swimTimeReadout, swimTimeValue, swimMode, null);
     hasLegError = true;
   }
 
   try {
     bikeDuration = readBikeDuration();
     clearFieldError(bikeTimeError);
+    renderLegTime(bikeTimeReadout, bikeTimeValue, bikeMode, bikeDuration);
   } catch (err) {
     showFieldError(bikeTimeError, err.message);
+    renderLegTime(bikeTimeReadout, bikeTimeValue, bikeMode, null);
     hasLegError = true;
   }
 
   try {
     runDuration = readRunDuration();
     clearFieldError(runTimeError);
+    renderLegTime(runTimeReadout, runTimeValue, runMode, runDuration);
   } catch (err) {
     showFieldError(runTimeError, err.message);
+    renderLegTime(runTimeReadout, runTimeValue, runMode, null);
     hasLegError = true;
   }
 
