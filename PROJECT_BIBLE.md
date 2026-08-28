@@ -307,7 +307,7 @@ Visual design direction, result interaction, Triathlon's solve-for model, and re
 | # | Date | Decision | Status |
 |---|---|---|---|
 | 1 | 22 Jul 2026 | Project Bible established as the authoritative source of truth | CONFIRMED |
-| 2 | 22 Jul 2026 | MVP = 4 calculators, client-side only, no accounts/saved data | PROPOSED — awaiting approval |
+| 2 | 22 Jul 2026 | MVP = 4 calculators, client-side only, no accounts/saved data | CONFIRMED (signed off 28 Aug 2026 — built, tested, and deployed as specified) |
 | 3 | 22 Jul 2026 | Tech stack: vanilla HTML/CSS/JS + Jest + GitHub Pages | CONFIRMED |
 | 4 | 22 Jul 2026 | Unit switching: single global toggle, not per-calculator | CONFIRMED |
 | 5 | 22 Jul 2026 | Default units: auto-detected from browser/locale, fallback to metric | CONFIRMED |
@@ -336,9 +336,7 @@ Visual design direction, result interaction, Triathlon's solve-for model, and re
 | 27 | 28 Aug 2026 | Extended Decision #9: Cycling standard distances now also include 50K, 90K, and 180K alongside the original 40K Time Trial, Metric Century, and Century | CONFIRMED |
 
 ## 24. Risks & Unresolved Questions
-**REQUIRES DECISION:**
-Standard race distances and rounding rules are now confirmed for all four calculators (Running, Cycling, Swimming, Triathlon) as of 29 Jul 2026 — see Decision Log, Section 23, items 6–17. No outstanding items remain in this category.
-3. MVP scope as a whole set (Section 6) still needs an explicit sign-off, even though its individual parts come straight from your brief.
+Standard race distances and rounding rules are confirmed for all four calculators (Running, Cycling, Swimming, Triathlon) as of 29 Jul 2026 — see Decision Log, Section 23, items 6–17. MVP scope as a whole set (Section 6, Decision #2) was signed off 28 Aug 2026. No items remain in the REQUIRES DECISION category.
 
 **Lower-priority, can wait:**
 - Visual design direction/branding.
