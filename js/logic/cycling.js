@@ -12,8 +12,11 @@ import { metersToKm, metersToMiles, kmToMeters } from './unitConversion.js';
 
 export const CYCLING_STANDARD_DISTANCES = [
   { label: '40K Time Trial', meters: 40000 },
+  { label: '50K', meters: 50000 },
+  { label: '90K', meters: 90000 },
   { label: 'Metric Century', meters: 100000 },
-  { label: 'Century', meters: 160934.4 }
+  { label: 'Century', meters: 160934.4 },
+  { label: '180K', meters: 180000 }
 ];
 
 // Section 13: soft-warning thresholds (not blocked) — roughly 2,000 km or 100 hours,

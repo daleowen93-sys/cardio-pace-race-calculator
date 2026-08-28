@@ -14,13 +14,19 @@ import {
 } from '../js/logic/cycling.js';
 
 describe('CYCLING_STANDARD_DISTANCES', () => {
-  test('has the 3 expected standard distances', () => {
-    expect(CYCLING_STANDARD_DISTANCES).toHaveLength(3);
+  test('has the 6 expected standard distances', () => {
+    expect(CYCLING_STANDARD_DISTANCES).toHaveLength(6);
   });
 
   test('Century is 160934.4m (100 miles)', () => {
     const century = CYCLING_STANDARD_DISTANCES.find((d) => d.label === 'Century');
     expect(century.meters).toBe(160934.4);
+  });
+
+  test('50K, 90K, and 180K are present at their exact metre values', () => {
+    expect(CYCLING_STANDARD_DISTANCES.find((d) => d.label === '50K').meters).toBe(50000);
+    expect(CYCLING_STANDARD_DISTANCES.find((d) => d.label === '90K').meters).toBe(90000);
+    expect(CYCLING_STANDARD_DISTANCES.find((d) => d.label === '180K').meters).toBe(180000);
   });
 });
 
