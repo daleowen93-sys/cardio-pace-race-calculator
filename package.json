@@ -1,0 +1,13 @@
+{
+  "name": "cardio-pace-race-calculator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cardio Pace & Race Calculator — static web app. Logic-module test suite (Section 16/19 of PROJECT_BIBLE.md).",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/.bin/jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
