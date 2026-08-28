@@ -31,6 +31,7 @@ import { calculateTotalTime, formatTime, TRIATHLON_STANDARD_DISTANCES } from '..
 import { formatDistanceKm, formatDistanceMiles } from '../logic/running.js';
 import { formatDistanceMeters, formatDistanceYards } from '../logic/swimming.js';
 import { kmToMeters, metersToKm, milesToMeters, metersToMiles, yardsToMeters, metersToYards } from '../logic/unitConversion.js';
+import { prefersImperial } from './unitPreference.js';
 
 const PLACEHOLDER = '–:––:––';
 const DEBOUNCE_MS = 300;
@@ -85,6 +86,12 @@ const heroResult = document.querySelector('.hero-result');
 function getChipDistances(chip) {
   const standard = TRIATHLON_STANDARD_DISTANCES.find((d) => d.label === chip.textContent.trim());
   return standard ? { swim: standard.swimMeters, bike: standard.bikeMeters, run: standard.runMeters } : null;
+}
+
+// Section 12: default unit is auto-detected from the browser locale, overriding
+// the static HTML's metric default, before any state is read from the toggle.
+if (prefersImperial()) {
+  document.getElementById('unit-imperial').checked = true;
 }
 
 const initiallySelectedChip = Array.from(standardChips).find((c) => c.getAttribute('aria-pressed') === 'true');
@@ -404,5 +411,8 @@ runDistanceInput.addEventListener('input', () => {
 
 form.addEventListener('submit', (e) => e.preventDefault());
 
+swimDistanceUnit.textContent = currentUnit === 'metric' ? 'm' : 'yd';
+bikeDistanceUnit.textContent = currentUnit === 'metric' ? 'km' : 'mi';
+runDistanceUnit.textContent = currentUnit === 'metric' ? 'km' : 'mi';
 updateBadges();
 recalculate();

@@ -26,6 +26,24 @@
   --accent-swimming: #0E8FA8;
   --accent-triathlon: #6A4FE0;
 
+  /* Text-safe variants, darkened just enough to clear 4.5:1 against a light
+     surface for small text (Section 14: WCAG AA) — the plain accents above read
+     as large/bold text (page titles) or as borders/backgrounds/outlines, where
+     3:1 (or no requirement) applies and the original values already pass; only
+     small accent-coloured text (e.g. a selected chip's label) needs this variant. */
+  --accent-running-text: #C34E42;
+  --accent-cycling-text: #2C863A;
+  --accent-swimming-text: #0D8197;
+  --accent-triathlon-text: #6A4FE0;
+
+  /* Safe fallback for --accent/--accent-text on any page/element that isn't
+     scoped to one of the four .activity-* classes below (e.g. the activity-
+     selection home page) — without this, var(--accent) resolves to nothing
+     there, which silently breaks focus outlines and hover borders site-wide
+     rather than just failing to show a colour. */
+  --accent: var(--text);
+  --accent-text: var(--text-secondary);
+
   /* Typography */
   --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Segoe UI Mono", Consolas, "Liberation Mono", Menlo, monospace;
@@ -49,14 +67,21 @@
     --error: #FF6B5E;
     --warning: #F0B429;
     --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.45);
+
+    /* Lightened for dark mode — same 4.5:1-for-small-text purpose as the light
+       variants above, recomputed against the dark surface. */
+    --accent-running-text: #E85D4E;
+    --accent-cycling-text: #3B964A;
+    --accent-swimming-text: #1391AA;
+    --accent-triathlon-text: #8B76E7;
   }
 }
 
 /* Scope the active accent colour per activity page */
-.activity-running { --accent: var(--accent-running); }
-.activity-cycling { --accent: var(--accent-cycling); }
-.activity-swimming { --accent: var(--accent-swimming); }
-.activity-triathlon { --accent: var(--accent-triathlon); }
+.activity-running { --accent: var(--accent-running); --accent-text: var(--accent-running-text); }
+.activity-cycling { --accent: var(--accent-cycling); --accent-text: var(--accent-cycling-text); }
+.activity-swimming { --accent: var(--accent-swimming); --accent-text: var(--accent-swimming-text); }
+.activity-triathlon { --accent: var(--accent-triathlon); --accent-text: var(--accent-triathlon-text); }
 
 /* --------------------------------------------------------------------------
    2. Reset & base
@@ -298,7 +323,7 @@ button {
 }
 
 .segmented-control-compact .segmented-label {
-  min-height: 36px;
+  min-height: 40px;
   min-width: 44px;
   padding: 6px 10px;
   font-size: 0.8125rem;
@@ -335,7 +360,7 @@ button {
 .chip[aria-pressed="true"] {
   background: color-mix(in srgb, var(--accent) 12%, var(--surface));
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .chip-custom {
@@ -511,7 +536,75 @@ input[type="number"]:focus-visible {
 }
 
 /* --------------------------------------------------------------------------
-   11. Accessibility — focus states & reduced motion (Section 14)
+   11. Home page — activity selection (Section 5/18)
+   -------------------------------------------------------------------------- */
+
+.app-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.app-subtitle {
+  margin-top: 6px;
+  color: var(--text-secondary);
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activity-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  min-height: 44px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.activity-card:hover {
+  border-color: var(--card-accent);
+  transform: translateY(-1px);
+}
+
+.activity-card-icon {
+  display: flex;
+  flex: none;
+  color: var(--card-accent);
+}
+
+.activity-card-icon svg {
+  display: block;
+}
+
+.activity-card-label {
+  flex: 1 1 auto;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.activity-card-chevron {
+  flex: none;
+  color: var(--text-secondary);
+}
+
+.activity-card-running { --card-accent: var(--accent-running); }
+.activity-card-cycling { --card-accent: var(--accent-cycling); }
+.activity-card-swimming { --card-accent: var(--accent-swimming); }
+.activity-card-triathlon { --card-accent: var(--accent-triathlon); }
+
+/* --------------------------------------------------------------------------
+   12. Accessibility — focus states & reduced motion (Section 14)
    -------------------------------------------------------------------------- */
 
 a:focus-visible,
