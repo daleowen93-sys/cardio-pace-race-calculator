@@ -333,6 +333,7 @@ Visual design direction, result interaction, Triathlon's solve-for model, and re
 | 24 | 28 Aug 2026 | Formal testing/QA pass (Section 19) complete: Jest suite (92 tests) covering all 5 logic modules; manual browser QA across all 4 calculators for mobile responsiveness, keyboard accessibility, error states, and dark mode. Found and fixed a gap: Running was missing the Section 13 extreme-value soft warning present in Cycling/Swimming — now added and covered by tests. | CONFIRMED |
 | 25 | 28 Aug 2026 | Superseded Decision #5: default units are now always metric on load, regardless of browser locale (locale-based auto-detection removed per user request) | CONFIRMED |
 | 26 | 28 Aug 2026 | Superseded Decision #20: Triathlon now supports per-leg Pace (swim/run) or Speed (bike) input as an alternative to direct Time — that leg's duration is computed from its distance via calculateTime, reused from running.js/cycling.js/swimming.js. Triathlon still has no overall distance-solving mode. | CONFIRMED |
+| 27 | 28 Aug 2026 | Extended Decision #9: Cycling standard distances now also include 50K, 90K, and 180K alongside the original 40K Time Trial, Metric Century, and Century | CONFIRMED |
 
 ## 24. Risks & Unresolved Questions
 **REQUIRES DECISION:**
