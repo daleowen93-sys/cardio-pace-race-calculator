@@ -7,7 +7,7 @@ PROJECT_BIBLE.md is the authoritative source of truth. Read the relevant section
 - Work in small, reviewable steps. Don't combine unrelated changes into one step.
 - Logic (js/logic/) stays completely separate from UI (js/ui/) — pure functions, no DOM code in logic files.
 - Build static structure/styling before wiring up live behavior, as separate reviewable steps.
-- Never commit or push without the user explicitly saying to do so in that message — this applies even if file edits are set to auto-approve. Committing and pushing are always a distinct, separate ask.
+- Commit and push automatically once a piece of work is built and verified working — no need to ask each time. The user's role is testing things when asked and weighing in on design/aesthetic questions, not approving git mechanics.
 
 ## Showing your work
 - When asked to show a file's contents, show the actual complete code — never a summary or description in place of it.
