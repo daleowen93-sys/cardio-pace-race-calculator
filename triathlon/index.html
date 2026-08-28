@@ -98,6 +98,10 @@
             <input type="number" id="swim-seconds" name="swim-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="swim-time-error">
           </div>
         </div>
+        <p class="leg-time-readout" id="swim-pace-readout" hidden>
+          <span class="result-secondary-label">Pace</span>
+          <span class="result-secondary-value" id="swim-pace-value"></span>
+        </p>
 
         <div class="field-group" id="swim-pace-fields" hidden>
           <p class="section-label" id="swim-pace-unit-hint">Pace (min/100m)</p>
@@ -163,6 +167,10 @@
             <input type="number" id="bike-seconds" name="bike-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="bike-time-error">
           </div>
         </div>
+        <p class="leg-time-readout" id="bike-speed-readout" hidden>
+          <span class="result-secondary-label">Speed</span>
+          <span class="result-secondary-value" id="bike-speed-value"></span>
+        </p>
 
         <div class="field" id="bike-speed-field" hidden>
           <label for="bike-speed-input">Speed</label>
@@ -221,6 +229,10 @@
             <input type="number" id="run-seconds" name="run-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run-time-error">
           </div>
         </div>
+        <p class="leg-time-readout" id="run-pace-readout" hidden>
+          <span class="result-secondary-label">Pace</span>
+          <span class="result-secondary-value" id="run-pace-value"></span>
+        </p>
 
         <div class="field-group" id="run-pace-fields" hidden>
           <p class="section-label" id="run-pace-unit-hint">Pace (min/km)</p>

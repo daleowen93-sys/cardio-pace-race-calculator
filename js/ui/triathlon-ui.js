@@ -34,9 +34,28 @@
 // Section 18: results update live, debounced briefly after the last keystroke.
 
 import { calculateTotalTime, formatTime, TRIATHLON_STANDARD_DISTANCES } from '../logic/triathlon.js';
-import { calculateTime as calculateRunTime, formatDistanceKm, formatDistanceMiles } from '../logic/running.js';
-import { calculateTime as calculateBikeTime } from '../logic/cycling.js';
-import { calculateTime as calculateSwimTime, formatDistanceMeters, formatDistanceYards } from '../logic/swimming.js';
+import {
+  calculateTime as calculateRunTime,
+  calculatePace as calculateRunPace,
+  formatPaceMinPerKm,
+  formatPaceMinPerMile,
+  formatDistanceKm,
+  formatDistanceMiles
+} from '../logic/running.js';
+import {
+  calculateTime as calculateBikeTime,
+  calculateSpeed as calculateBikeSpeed,
+  formatSpeedKmh,
+  formatSpeedMph
+} from '../logic/cycling.js';
+import {
+  calculateTime as calculateSwimTime,
+  calculatePace as calculateSwimPace,
+  formatPacePer100m,
+  formatPacePer100yd,
+  formatDistanceMeters,
+  formatDistanceYards
+} from '../logic/swimming.js';
 import { kmToMeters, metersToKm, milesToMeters, metersToMiles, yardsToMeters, metersToYards, METERS_PER_YARD } from '../logic/unitConversion.js';
 
 const PLACEHOLDER = '–:––:––';
@@ -76,6 +95,8 @@ const swimPaceMinutesInput = document.getElementById('swim-pace-minutes');
 const swimPaceSecondsInput = document.getElementById('swim-pace-seconds');
 const swimTimeReadout = document.getElementById('swim-time-readout');
 const swimTimeValue = document.getElementById('swim-time-value');
+const swimPaceReadout = document.getElementById('swim-pace-readout');
+const swimPaceValue = document.getElementById('swim-pace-value');
 
 const bikeModeRadios = document.querySelectorAll('input[name="bike-mode"]');
 const bikeTimeFields = document.getElementById('bike-time-fields');
@@ -88,6 +109,8 @@ const bikeSpeedInput = document.getElementById('bike-speed-input');
 const bikeSpeedUnitSuffix = document.getElementById('bike-speed-unit-suffix');
 const bikeTimeReadout = document.getElementById('bike-time-readout');
 const bikeTimeValue = document.getElementById('bike-time-value');
+const bikeSpeedReadout = document.getElementById('bike-speed-readout');
+const bikeSpeedValue = document.getElementById('bike-speed-value');
 
 const runModeRadios = document.querySelectorAll('input[name="run-mode"]');
 const runTimeFields = document.getElementById('run-time-fields');
@@ -101,6 +124,8 @@ const runPaceMinutesInput = document.getElementById('run-pace-minutes');
 const runPaceSecondsInput = document.getElementById('run-pace-seconds');
 const runTimeReadout = document.getElementById('run-time-readout');
 const runTimeValue = document.getElementById('run-time-value');
+const runPaceReadout = document.getElementById('run-pace-readout');
+const runPaceValue = document.getElementById('run-pace-value');
 
 const t1MinutesInput = document.getElementById('t1-minutes');
 const t1SecondsInput = document.getElementById('t1-seconds');
@@ -464,6 +489,61 @@ function renderLegTime(readoutEl, valueEl, mode, duration) {
   readoutEl.hidden = false;
 }
 
+// The mirror of renderLegTime: shows this leg's resulting Pace/Speed under its
+// Time input — only in Time mode, using that leg's distance (the selected
+// standard or custom leg distance). `duration` is whatever readSwimDuration
+// (etc.) returned in Time mode: a { hours, minutes, seconds } object, or null.
+// A caught calculatePace/calculateSpeed error (e.g. all-zero duration) just
+// hides the readout — the leg's own field-error paragraph already covers that
+// case via calculateTotalTime's validation.
+function renderSwimPaceReadout(duration) {
+  if (swimMode !== 'time' || swimMeters === null || duration === null) {
+    swimPaceReadout.hidden = true;
+    return;
+  }
+  try {
+    const pace = calculateSwimPace(swimMeters, duration);
+    swimPaceValue.textContent = currentUnit === 'metric'
+      ? `${formatPacePer100m(pace.secPer100m)} /100m`
+      : `${formatPacePer100yd(pace.secPer100yd)} /100yd`;
+    swimPaceReadout.hidden = false;
+  } catch {
+    swimPaceReadout.hidden = true;
+  }
+}
+
+function renderBikeSpeedReadout(duration) {
+  if (bikeMode !== 'time' || bikeMeters === null || duration === null) {
+    bikeSpeedReadout.hidden = true;
+    return;
+  }
+  try {
+    const speed = calculateBikeSpeed(bikeMeters, duration);
+    bikeSpeedValue.textContent = currentUnit === 'metric'
+      ? `${formatSpeedKmh(speed.kmh)} km/h`
+      : `${formatSpeedMph(speed.mph)} mph`;
+    bikeSpeedReadout.hidden = false;
+  } catch {
+    bikeSpeedReadout.hidden = true;
+  }
+}
+
+function renderRunPaceReadout(duration) {
+  if (runMode !== 'time' || runMeters === null || duration === null) {
+    runPaceReadout.hidden = true;
+    return;
+  }
+  try {
+    const pace = calculateRunPace(runMeters, duration);
+    runPaceValue.textContent = currentUnit === 'metric'
+      ? `${formatPaceMinPerKm(pace.secPerKm)} /km`
+      : `${formatPaceMinPerMile(pace.secPerMile)} /mi`;
+    runPaceReadout.hidden = false;
+  } catch {
+    runPaceReadout.hidden = true;
+  }
+}
+
 // Returns this leg's duration — a { hours, minutes, seconds } object in 'time'
 // mode (unchanged v1 behaviour), or a plain number of seconds computed from
 // distance + pace/speed in 'pace'/'speed' mode — or null if incomplete. Throws
@@ -515,9 +595,11 @@ function recalculate() {
     swimDuration = readSwimDuration();
     clearFieldError(swimTimeError);
     renderLegTime(swimTimeReadout, swimTimeValue, swimMode, swimDuration);
+    renderSwimPaceReadout(swimDuration);
   } catch (err) {
     showFieldError(swimTimeError, err.message);
     renderLegTime(swimTimeReadout, swimTimeValue, swimMode, null);
+    renderSwimPaceReadout(null);
     hasLegError = true;
   }
 
@@ -525,9 +607,11 @@ function recalculate() {
     bikeDuration = readBikeDuration();
     clearFieldError(bikeTimeError);
     renderLegTime(bikeTimeReadout, bikeTimeValue, bikeMode, bikeDuration);
+    renderBikeSpeedReadout(bikeDuration);
   } catch (err) {
     showFieldError(bikeTimeError, err.message);
     renderLegTime(bikeTimeReadout, bikeTimeValue, bikeMode, null);
+    renderBikeSpeedReadout(null);
     hasLegError = true;
   }
 
@@ -535,9 +619,11 @@ function recalculate() {
     runDuration = readRunDuration();
     clearFieldError(runTimeError);
     renderLegTime(runTimeReadout, runTimeValue, runMode, runDuration);
+    renderRunPaceReadout(runDuration);
   } catch (err) {
     showFieldError(runTimeError, err.message);
     renderLegTime(runTimeReadout, runTimeValue, runMode, null);
+    renderRunPaceReadout(null);
     hasLegError = true;
   }
 
