@@ -17,15 +17,18 @@
 
     <form class="calculator" novalidate>
 
+      <fieldset class="field-group">
+        <legend class="section-label">Run Input</legend>
+        <div class="segmented-control segmented-control-compact">
+          <input type="radio" class="segmented-input" id="runs-mode-time" name="runs-mode" value="time" checked>
+          <label class="segmented-label" for="runs-mode-time">Time</label>
+          <input type="radio" class="segmented-input" id="runs-mode-pace" name="runs-mode" value="pace">
+          <label class="segmented-label" for="runs-mode-pace">Pace</label>
+        </div>
+      </fieldset>
+
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 1 <span class="leg-distance-badge">1km</span></legend>
-
-        <div class="segmented-control segmented-control-compact">
-          <input type="radio" class="segmented-input" id="run1-mode-time" name="run1-mode" value="time" checked>
-          <label class="segmented-label" for="run1-mode-time">Time</label>
-          <input type="radio" class="segmented-input" id="run1-mode-pace" name="run1-mode" value="pace">
-          <label class="segmented-label" for="run1-mode-pace">Pace</label>
-        </div>
 
         <div class="time-input-group" id="run1-time-fields">
           <div class="time-part">
@@ -84,13 +87,6 @@
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 2 <span class="leg-distance-badge">1km</span></legend>
 
-        <div class="segmented-control segmented-control-compact">
-          <input type="radio" class="segmented-input" id="run2-mode-time" name="run2-mode" value="time" checked>
-          <label class="segmented-label" for="run2-mode-time">Time</label>
-          <input type="radio" class="segmented-input" id="run2-mode-pace" name="run2-mode" value="pace">
-          <label class="segmented-label" for="run2-mode-pace">Pace</label>
-        </div>
-
         <div class="time-input-group" id="run2-time-fields">
           <div class="time-part">
             <label for="run2-minutes">m</label>
@@ -147,13 +143,6 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 3 <span class="leg-distance-badge">1km</span></legend>
-
-        <div class="segmented-control segmented-control-compact">
-          <input type="radio" class="segmented-input" id="run3-mode-time" name="run3-mode" value="time" checked>
-          <label class="segmented-label" for="run3-mode-time">Time</label>
-          <input type="radio" class="segmented-input" id="run3-mode-pace" name="run3-mode" value="pace">
-          <label class="segmented-label" for="run3-mode-pace">Pace</label>
-        </div>
 
         <div class="time-input-group" id="run3-time-fields">
           <div class="time-part">
@@ -212,13 +201,6 @@
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 4 <span class="leg-distance-badge">1km</span></legend>
 
-        <div class="segmented-control segmented-control-compact">
-          <input type="radio" class="segmented-input" id="run4-mode-time" name="run4-mode" value="time" checked>
-          <label class="segmented-label" for="run4-mode-time">Time</label>
-          <input type="radio" class="segmented-input" id="run4-mode-pace" name="run4-mode" value="pace">
-          <label class="segmented-label" for="run4-mode-pace">Pace</label>
-        </div>
-
         <div class="time-input-group" id="run4-time-fields">
           <div class="time-part">
             <label for="run4-minutes">m</label>
@@ -275,13 +257,6 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 5 <span class="leg-distance-badge">1km</span></legend>
-
-        <div class="segmented-control segmented-control-compact">
-          <input type="radio" class="segmented-input" id="run5-mode-time" name="run5-mode" value="time" checked>
-          <label class="segmented-label" for="run5-mode-time">Time</label>
-          <input type="radio" class="segmented-input" id="run5-mode-pace" name="run5-mode" value="pace">
-          <label class="segmented-label" for="run5-mode-pace">Pace</label>
-        </div>
 
         <div class="time-input-group" id="run5-time-fields">
           <div class="time-part">
@@ -340,13 +315,6 @@
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 6 <span class="leg-distance-badge">1km</span></legend>
 
-        <div class="segmented-control segmented-control-compact">
-          <input type="radio" class="segmented-input" id="run6-mode-time" name="run6-mode" value="time" checked>
-          <label class="segmented-label" for="run6-mode-time">Time</label>
-          <input type="radio" class="segmented-input" id="run6-mode-pace" name="run6-mode" value="pace">
-          <label class="segmented-label" for="run6-mode-pace">Pace</label>
-        </div>
-
         <div class="time-input-group" id="run6-time-fields">
           <div class="time-part">
             <label for="run6-minutes">m</label>
@@ -404,13 +372,6 @@
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 7 <span class="leg-distance-badge">1km</span></legend>
 
-        <div class="segmented-control segmented-control-compact">
-          <input type="radio" class="segmented-input" id="run7-mode-time" name="run7-mode" value="time" checked>
-          <label class="segmented-label" for="run7-mode-time">Time</label>
-          <input type="radio" class="segmented-input" id="run7-mode-pace" name="run7-mode" value="pace">
-          <label class="segmented-label" for="run7-mode-pace">Pace</label>
-        </div>
-
         <div class="time-input-group" id="run7-time-fields">
           <div class="time-part">
             <label for="run7-minutes">m</label>
@@ -467,13 +428,6 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 8 <span class="leg-distance-badge">1km</span></legend>
-
-        <div class="segmented-control segmented-control-compact">
-          <input type="radio" class="segmented-input" id="run8-mode-time" name="run8-mode" value="time" checked>
-          <label class="segmented-label" for="run8-mode-time">Time</label>
-          <input type="radio" class="segmented-input" id="run8-mode-pace" name="run8-mode" value="pace">
-          <label class="segmented-label" for="run8-mode-pace">Pace</label>
-        </div>
 
         <div class="time-input-group" id="run8-time-fields">
           <div class="time-part">

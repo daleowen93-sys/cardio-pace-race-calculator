@@ -7,14 +7,17 @@
 // segment is just a plain minutes/seconds "time to complete" input, summed to a
 // total finish time (same total-time-from-legs model as triathlon-ui.js).
 //
-// The 8 running legs each get a Time/Pace toggle (mirroring Triathlon's leg
-// toggles), Time being the original default. Unlike Triathlon's runs, this
-// needs no unit conversion or calculatePace/calculateTime round-trip through
-// running.js: every Hyrox run is exactly 1km, so "time for this run" and "pace
-// per km" are the same number — the toggle only changes which input is live
-// and which is shown as a read-only echo underneath; both read the same
-// { minutes, seconds } shape into the calculation. The 8 stations have no
-// natural pace concept and keep their original plain time-only input.
+// The 8 running legs share ONE Time/Pace toggle (not one each) — Section 18:
+// in practice every run split comes from the same source in one sitting (a
+// watch giving times, or a training plan giving target paces), so a per-run
+// toggle would just be 8x the UI for a mode nobody actually mixes. Unlike
+// Triathlon's runs, this needs no unit conversion or calculatePace/
+// calculateTime round-trip through running.js: every Hyrox run is exactly
+// 1km, so "time for this run" and "pace per km" are the same number — the
+// toggle only changes which input is live and which is shown as a read-only
+// echo underneath; both read the same { minutes, seconds } shape into the
+// calculation. The 8 stations have no natural pace concept and keep their
+// original plain time-only input.
 //
 // Section 13: all 16 segments are required (blank on both a segment's active
 // m/s fields means "incomplete", not invalid — placeholder shown, no error);
@@ -34,12 +37,15 @@ const EXTREME_WARNING_MESSAGE = "That's an extreme time — double check your in
 const form = document.querySelector('.calculator');
 const heroResult = document.querySelector('.hero-result');
 const extremeWarning = document.getElementById('extreme-warning');
+const runsModeRadios = document.querySelectorAll('input[name="runs-mode"]');
 
 // 'sledPush' -> 'sled-push' — camelCase station keys map to kebab-case HTML ids,
 // matching this project's existing id conventions.
 function toKebabId(key) {
   return key.replace(/([A-Z])/g, '-$1').toLowerCase();
 }
+
+let runsMode = 'time';
 
 const segments = HYROX_STATIONS.map((station) => {
   const id = toKebabId(station.key);
@@ -60,7 +66,6 @@ const segments = HYROX_STATIONS.map((station) => {
 
   return {
     ...base,
-    mode: 'time',
     timeFields: document.getElementById(`${id}-time-fields`),
     paceFields: document.getElementById(`${id}-pace-fields`),
     paceMinutesInput: document.getElementById(`${id}-pace-minutes`),
@@ -68,8 +73,7 @@ const segments = HYROX_STATIONS.map((station) => {
     paceReadout: document.getElementById(`${id}-pace-readout`),
     paceValue: document.getElementById(`${id}-pace-value`),
     timeReadout: document.getElementById(`${id}-time-readout`),
-    timeValue: document.getElementById(`${id}-time-value`),
-    modeRadios: document.querySelectorAll(`input[name="${id}-mode"]`)
+    timeValue: document.getElementById(`${id}-time-value`)
   };
 });
 
@@ -98,10 +102,10 @@ function showWarning(show) {
 
 // Returns a { minutes, seconds } object, or null if both of the segment's
 // currently-active fields are blank (Section 13: "incomplete", not invalid).
-// For a run in Pace mode, reads the pace fields instead of the time fields —
-// same shape either way, since a 1km run's pace and time are the same number.
+// In Pace mode, a run reads its pace fields instead of its time fields — same
+// shape either way, since a 1km run's pace and time are the same number.
 function readSegmentDuration(segment) {
-  const usesPaceFields = segment.isRun && segment.mode === 'pace';
+  const usesPaceFields = segment.isRun && runsMode === 'pace';
   const minutesInput = usesPaceFields ? segment.paceMinutesInput : segment.minutesInput;
   const secondsInput = usesPaceFields ? segment.paceSecondsInput : segment.secondsInput;
 
@@ -122,9 +126,9 @@ function readSegmentDuration(segment) {
 // in Pace mode — using the same resolved duration (no conversion needed, see
 // file header). Hidden when incomplete or not yet a valid positive duration.
 function renderRunReadout(run, duration) {
-  const readoutEl = run.mode === 'time' ? run.paceReadout : run.timeReadout;
-  const valueEl = run.mode === 'time' ? run.paceValue : run.timeValue;
-  const otherReadoutEl = run.mode === 'time' ? run.timeReadout : run.paceReadout;
+  const readoutEl = runsMode === 'time' ? run.paceReadout : run.timeReadout;
+  const valueEl = runsMode === 'time' ? run.paceValue : run.timeValue;
+  const otherReadoutEl = runsMode === 'time' ? run.timeReadout : run.paceReadout;
   otherReadoutEl.hidden = true;
 
   if (duration === null) {
@@ -137,7 +141,7 @@ function renderRunReadout(run, duration) {
     return;
   }
   const formatted = formatTime(seconds);
-  valueEl.textContent = run.mode === 'time' ? `${formatted} /km` : formatted;
+  valueEl.textContent = runsMode === 'time' ? `${formatted} /km` : formatted;
   readoutEl.hidden = false;
 }
 
@@ -190,21 +194,24 @@ function recalculate() {
 
 const debouncedRecalculate = debounce(recalculate, DEBOUNCE_MS);
 
-function setRunMode(run, mode) {
-  run.mode = mode;
-  run.timeFields.hidden = mode === 'pace';
-  run.paceFields.hidden = mode === 'time';
-  clearFieldError(run.errorEl);
+function setRunsMode(mode) {
+  runsMode = mode;
+  segments.forEach((segment) => {
+    if (!segment.isRun) {
+      return;
+    }
+    segment.timeFields.hidden = mode === 'pace';
+    segment.paceFields.hidden = mode === 'time';
+    clearFieldError(segment.errorEl);
+  });
   recalculate();
 }
 
-segments.forEach((segment) => {
-  if (segment.isRun) {
-    segment.modeRadios.forEach((radio) => {
-      radio.addEventListener('change', () => setRunMode(segment, radio.value));
-    });
-  }
+runsModeRadios.forEach((radio) => {
+  radio.addEventListener('change', () => setRunsMode(radio.value));
+});
 
+segments.forEach((segment) => {
   const inputs = segment.isRun
     ? [segment.minutesInput, segment.secondsInput, segment.paceMinutesInput, segment.paceSecondsInput]
     : [segment.minutesInput, segment.secondsInput];
