@@ -19,7 +19,15 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 1 <span class="leg-distance-badge">1km</span></legend>
-        <div class="time-input-group">
+
+        <div class="segmented-control segmented-control-compact">
+          <input type="radio" class="segmented-input" id="run1-mode-time" name="run1-mode" value="time" checked>
+          <label class="segmented-label" for="run1-mode-time">Time</label>
+          <input type="radio" class="segmented-input" id="run1-mode-pace" name="run1-mode" value="pace">
+          <label class="segmented-label" for="run1-mode-pace">Pace</label>
+        </div>
+
+        <div class="time-input-group" id="run1-time-fields">
           <div class="time-part">
             <label for="run1-minutes">m</label>
             <input type="number" id="run1-minutes" name="run1-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run1-error">
@@ -30,6 +38,30 @@
             <input type="number" id="run1-seconds" name="run1-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run1-error">
           </div>
         </div>
+        <p class="leg-time-readout" id="run1-pace-readout" hidden>
+          <span class="result-secondary-label">Pace</span>
+          <span class="result-secondary-value" id="run1-pace-value"></span>
+        </p>
+
+        <div class="field-group" id="run1-pace-fields" hidden>
+          <p class="section-label">Pace (min/km)</p>
+          <div class="time-input-group">
+            <div class="time-part">
+              <label for="run1-pace-minutes">min</label>
+              <input type="number" id="run1-pace-minutes" name="run1-pace-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run1-error">
+            </div>
+            <span class="time-separator" aria-hidden="true">:</span>
+            <div class="time-part">
+              <label for="run1-pace-seconds">sec</label>
+              <input type="number" id="run1-pace-seconds" name="run1-pace-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run1-error">
+            </div>
+          </div>
+        </div>
+        <p class="leg-time-readout" id="run1-time-readout" hidden>
+          <span class="result-secondary-label">Time</span>
+          <span class="result-secondary-value" id="run1-time-value"></span>
+        </p>
+
         <p class="field-error" id="run1-error" role="alert" hidden></p>
       </fieldset>
 
@@ -51,7 +83,15 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 2 <span class="leg-distance-badge">1km</span></legend>
-        <div class="time-input-group">
+
+        <div class="segmented-control segmented-control-compact">
+          <input type="radio" class="segmented-input" id="run2-mode-time" name="run2-mode" value="time" checked>
+          <label class="segmented-label" for="run2-mode-time">Time</label>
+          <input type="radio" class="segmented-input" id="run2-mode-pace" name="run2-mode" value="pace">
+          <label class="segmented-label" for="run2-mode-pace">Pace</label>
+        </div>
+
+        <div class="time-input-group" id="run2-time-fields">
           <div class="time-part">
             <label for="run2-minutes">m</label>
             <input type="number" id="run2-minutes" name="run2-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run2-error">
@@ -62,6 +102,30 @@
             <input type="number" id="run2-seconds" name="run2-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run2-error">
           </div>
         </div>
+        <p class="leg-time-readout" id="run2-pace-readout" hidden>
+          <span class="result-secondary-label">Pace</span>
+          <span class="result-secondary-value" id="run2-pace-value"></span>
+        </p>
+
+        <div class="field-group" id="run2-pace-fields" hidden>
+          <p class="section-label">Pace (min/km)</p>
+          <div class="time-input-group">
+            <div class="time-part">
+              <label for="run2-pace-minutes">min</label>
+              <input type="number" id="run2-pace-minutes" name="run2-pace-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run2-error">
+            </div>
+            <span class="time-separator" aria-hidden="true">:</span>
+            <div class="time-part">
+              <label for="run2-pace-seconds">sec</label>
+              <input type="number" id="run2-pace-seconds" name="run2-pace-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run2-error">
+            </div>
+          </div>
+        </div>
+        <p class="leg-time-readout" id="run2-time-readout" hidden>
+          <span class="result-secondary-label">Time</span>
+          <span class="result-secondary-value" id="run2-time-value"></span>
+        </p>
+
         <p class="field-error" id="run2-error" role="alert" hidden></p>
       </fieldset>
 
@@ -83,7 +147,15 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 3 <span class="leg-distance-badge">1km</span></legend>
-        <div class="time-input-group">
+
+        <div class="segmented-control segmented-control-compact">
+          <input type="radio" class="segmented-input" id="run3-mode-time" name="run3-mode" value="time" checked>
+          <label class="segmented-label" for="run3-mode-time">Time</label>
+          <input type="radio" class="segmented-input" id="run3-mode-pace" name="run3-mode" value="pace">
+          <label class="segmented-label" for="run3-mode-pace">Pace</label>
+        </div>
+
+        <div class="time-input-group" id="run3-time-fields">
           <div class="time-part">
             <label for="run3-minutes">m</label>
             <input type="number" id="run3-minutes" name="run3-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run3-error">
@@ -94,6 +166,30 @@
             <input type="number" id="run3-seconds" name="run3-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run3-error">
           </div>
         </div>
+        <p class="leg-time-readout" id="run3-pace-readout" hidden>
+          <span class="result-secondary-label">Pace</span>
+          <span class="result-secondary-value" id="run3-pace-value"></span>
+        </p>
+
+        <div class="field-group" id="run3-pace-fields" hidden>
+          <p class="section-label">Pace (min/km)</p>
+          <div class="time-input-group">
+            <div class="time-part">
+              <label for="run3-pace-minutes">min</label>
+              <input type="number" id="run3-pace-minutes" name="run3-pace-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run3-error">
+            </div>
+            <span class="time-separator" aria-hidden="true">:</span>
+            <div class="time-part">
+              <label for="run3-pace-seconds">sec</label>
+              <input type="number" id="run3-pace-seconds" name="run3-pace-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run3-error">
+            </div>
+          </div>
+        </div>
+        <p class="leg-time-readout" id="run3-time-readout" hidden>
+          <span class="result-secondary-label">Time</span>
+          <span class="result-secondary-value" id="run3-time-value"></span>
+        </p>
+
         <p class="field-error" id="run3-error" role="alert" hidden></p>
       </fieldset>
 
@@ -115,7 +211,15 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 4 <span class="leg-distance-badge">1km</span></legend>
-        <div class="time-input-group">
+
+        <div class="segmented-control segmented-control-compact">
+          <input type="radio" class="segmented-input" id="run4-mode-time" name="run4-mode" value="time" checked>
+          <label class="segmented-label" for="run4-mode-time">Time</label>
+          <input type="radio" class="segmented-input" id="run4-mode-pace" name="run4-mode" value="pace">
+          <label class="segmented-label" for="run4-mode-pace">Pace</label>
+        </div>
+
+        <div class="time-input-group" id="run4-time-fields">
           <div class="time-part">
             <label for="run4-minutes">m</label>
             <input type="number" id="run4-minutes" name="run4-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run4-error">
@@ -126,6 +230,30 @@
             <input type="number" id="run4-seconds" name="run4-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run4-error">
           </div>
         </div>
+        <p class="leg-time-readout" id="run4-pace-readout" hidden>
+          <span class="result-secondary-label">Pace</span>
+          <span class="result-secondary-value" id="run4-pace-value"></span>
+        </p>
+
+        <div class="field-group" id="run4-pace-fields" hidden>
+          <p class="section-label">Pace (min/km)</p>
+          <div class="time-input-group">
+            <div class="time-part">
+              <label for="run4-pace-minutes">min</label>
+              <input type="number" id="run4-pace-minutes" name="run4-pace-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run4-error">
+            </div>
+            <span class="time-separator" aria-hidden="true">:</span>
+            <div class="time-part">
+              <label for="run4-pace-seconds">sec</label>
+              <input type="number" id="run4-pace-seconds" name="run4-pace-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run4-error">
+            </div>
+          </div>
+        </div>
+        <p class="leg-time-readout" id="run4-time-readout" hidden>
+          <span class="result-secondary-label">Time</span>
+          <span class="result-secondary-value" id="run4-time-value"></span>
+        </p>
+
         <p class="field-error" id="run4-error" role="alert" hidden></p>
       </fieldset>
 
@@ -147,7 +275,15 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 5 <span class="leg-distance-badge">1km</span></legend>
-        <div class="time-input-group">
+
+        <div class="segmented-control segmented-control-compact">
+          <input type="radio" class="segmented-input" id="run5-mode-time" name="run5-mode" value="time" checked>
+          <label class="segmented-label" for="run5-mode-time">Time</label>
+          <input type="radio" class="segmented-input" id="run5-mode-pace" name="run5-mode" value="pace">
+          <label class="segmented-label" for="run5-mode-pace">Pace</label>
+        </div>
+
+        <div class="time-input-group" id="run5-time-fields">
           <div class="time-part">
             <label for="run5-minutes">m</label>
             <input type="number" id="run5-minutes" name="run5-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run5-error">
@@ -158,6 +294,30 @@
             <input type="number" id="run5-seconds" name="run5-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run5-error">
           </div>
         </div>
+        <p class="leg-time-readout" id="run5-pace-readout" hidden>
+          <span class="result-secondary-label">Pace</span>
+          <span class="result-secondary-value" id="run5-pace-value"></span>
+        </p>
+
+        <div class="field-group" id="run5-pace-fields" hidden>
+          <p class="section-label">Pace (min/km)</p>
+          <div class="time-input-group">
+            <div class="time-part">
+              <label for="run5-pace-minutes">min</label>
+              <input type="number" id="run5-pace-minutes" name="run5-pace-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run5-error">
+            </div>
+            <span class="time-separator" aria-hidden="true">:</span>
+            <div class="time-part">
+              <label for="run5-pace-seconds">sec</label>
+              <input type="number" id="run5-pace-seconds" name="run5-pace-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run5-error">
+            </div>
+          </div>
+        </div>
+        <p class="leg-time-readout" id="run5-time-readout" hidden>
+          <span class="result-secondary-label">Time</span>
+          <span class="result-secondary-value" id="run5-time-value"></span>
+        </p>
+
         <p class="field-error" id="run5-error" role="alert" hidden></p>
       </fieldset>
 
@@ -179,7 +339,15 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 6 <span class="leg-distance-badge">1km</span></legend>
-        <div class="time-input-group">
+
+        <div class="segmented-control segmented-control-compact">
+          <input type="radio" class="segmented-input" id="run6-mode-time" name="run6-mode" value="time" checked>
+          <label class="segmented-label" for="run6-mode-time">Time</label>
+          <input type="radio" class="segmented-input" id="run6-mode-pace" name="run6-mode" value="pace">
+          <label class="segmented-label" for="run6-mode-pace">Pace</label>
+        </div>
+
+        <div class="time-input-group" id="run6-time-fields">
           <div class="time-part">
             <label for="run6-minutes">m</label>
             <input type="number" id="run6-minutes" name="run6-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run6-error">
@@ -190,6 +358,30 @@
             <input type="number" id="run6-seconds" name="run6-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run6-error">
           </div>
         </div>
+        <p class="leg-time-readout" id="run6-pace-readout" hidden>
+          <span class="result-secondary-label">Pace</span>
+          <span class="result-secondary-value" id="run6-pace-value"></span>
+        </p>
+
+        <div class="field-group" id="run6-pace-fields" hidden>
+          <p class="section-label">Pace (min/km)</p>
+          <div class="time-input-group">
+            <div class="time-part">
+              <label for="run6-pace-minutes">min</label>
+              <input type="number" id="run6-pace-minutes" name="run6-pace-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run6-error">
+            </div>
+            <span class="time-separator" aria-hidden="true">:</span>
+            <div class="time-part">
+              <label for="run6-pace-seconds">sec</label>
+              <input type="number" id="run6-pace-seconds" name="run6-pace-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run6-error">
+            </div>
+          </div>
+        </div>
+        <p class="leg-time-readout" id="run6-time-readout" hidden>
+          <span class="result-secondary-label">Time</span>
+          <span class="result-secondary-value" id="run6-time-value"></span>
+        </p>
+
         <p class="field-error" id="run6-error" role="alert" hidden></p>
       </fieldset>
 
@@ -211,7 +403,15 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 7 <span class="leg-distance-badge">1km</span></legend>
-        <div class="time-input-group">
+
+        <div class="segmented-control segmented-control-compact">
+          <input type="radio" class="segmented-input" id="run7-mode-time" name="run7-mode" value="time" checked>
+          <label class="segmented-label" for="run7-mode-time">Time</label>
+          <input type="radio" class="segmented-input" id="run7-mode-pace" name="run7-mode" value="pace">
+          <label class="segmented-label" for="run7-mode-pace">Pace</label>
+        </div>
+
+        <div class="time-input-group" id="run7-time-fields">
           <div class="time-part">
             <label for="run7-minutes">m</label>
             <input type="number" id="run7-minutes" name="run7-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run7-error">
@@ -222,6 +422,30 @@
             <input type="number" id="run7-seconds" name="run7-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run7-error">
           </div>
         </div>
+        <p class="leg-time-readout" id="run7-pace-readout" hidden>
+          <span class="result-secondary-label">Pace</span>
+          <span class="result-secondary-value" id="run7-pace-value"></span>
+        </p>
+
+        <div class="field-group" id="run7-pace-fields" hidden>
+          <p class="section-label">Pace (min/km)</p>
+          <div class="time-input-group">
+            <div class="time-part">
+              <label for="run7-pace-minutes">min</label>
+              <input type="number" id="run7-pace-minutes" name="run7-pace-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run7-error">
+            </div>
+            <span class="time-separator" aria-hidden="true">:</span>
+            <div class="time-part">
+              <label for="run7-pace-seconds">sec</label>
+              <input type="number" id="run7-pace-seconds" name="run7-pace-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run7-error">
+            </div>
+          </div>
+        </div>
+        <p class="leg-time-readout" id="run7-time-readout" hidden>
+          <span class="result-secondary-label">Time</span>
+          <span class="result-secondary-value" id="run7-time-value"></span>
+        </p>
+
         <p class="field-error" id="run7-error" role="alert" hidden></p>
       </fieldset>
 
@@ -243,7 +467,15 @@
 
       <fieldset class="field-group leg-group">
         <legend class="section-label">Run 8 <span class="leg-distance-badge">1km</span></legend>
-        <div class="time-input-group">
+
+        <div class="segmented-control segmented-control-compact">
+          <input type="radio" class="segmented-input" id="run8-mode-time" name="run8-mode" value="time" checked>
+          <label class="segmented-label" for="run8-mode-time">Time</label>
+          <input type="radio" class="segmented-input" id="run8-mode-pace" name="run8-mode" value="pace">
+          <label class="segmented-label" for="run8-mode-pace">Pace</label>
+        </div>
+
+        <div class="time-input-group" id="run8-time-fields">
           <div class="time-part">
             <label for="run8-minutes">m</label>
             <input type="number" id="run8-minutes" name="run8-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run8-error">
@@ -254,6 +486,30 @@
             <input type="number" id="run8-seconds" name="run8-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run8-error">
           </div>
         </div>
+        <p class="leg-time-readout" id="run8-pace-readout" hidden>
+          <span class="result-secondary-label">Pace</span>
+          <span class="result-secondary-value" id="run8-pace-value"></span>
+        </p>
+
+        <div class="field-group" id="run8-pace-fields" hidden>
+          <p class="section-label">Pace (min/km)</p>
+          <div class="time-input-group">
+            <div class="time-part">
+              <label for="run8-pace-minutes">min</label>
+              <input type="number" id="run8-pace-minutes" name="run8-pace-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run8-error">
+            </div>
+            <span class="time-separator" aria-hidden="true">:</span>
+            <div class="time-part">
+              <label for="run8-pace-seconds">sec</label>
+              <input type="number" id="run8-pace-seconds" name="run8-pace-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run8-error">
+            </div>
+          </div>
+        </div>
+        <p class="leg-time-readout" id="run8-time-readout" hidden>
+          <span class="result-secondary-label">Time</span>
+          <span class="result-secondary-value" id="run8-time-value"></span>
+        </p>
+
         <p class="field-error" id="run8-error" role="alert" hidden></p>
       </fieldset>
 

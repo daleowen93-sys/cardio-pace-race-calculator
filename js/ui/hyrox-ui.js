@@ -7,15 +7,17 @@
 // segment is just a plain minutes/seconds "time to complete" input, summed to a
 // total finish time (same total-time-from-legs model as triathlon-ui.js).
 //
-// All 16 segments are homogeneous in shape (unlike Triathlon's legs, which mix
-// h/m/s legs, m/s transitions, and pace/speed inputs), so this file drives its
-// DOM lookups and event wiring directly from HYROX_STATIONS rather than
-// duplicating 16 near-identical blocks — the logic module's own toTotalSeconds
-// validation (missing/malformed components, negative values, seconds >= 59)
-// covers everything a segment needs without UI-level pre-validation.
+// The 8 running legs each get a Time/Pace toggle (mirroring Triathlon's leg
+// toggles), Time being the original default. Unlike Triathlon's runs, this
+// needs no unit conversion or calculatePace/calculateTime round-trip through
+// running.js: every Hyrox run is exactly 1km, so "time for this run" and "pace
+// per km" are the same number — the toggle only changes which input is live
+// and which is shown as a read-only echo underneath; both read the same
+// { minutes, seconds } shape into the calculation. The 8 stations have no
+// natural pace concept and keep their original plain time-only input.
 //
-// Section 13: all 16 segments are required (blank on both a segment's m/s
-// fields means "incomplete", not invalid — placeholder shown, no error);
+// Section 13: all 16 segments are required (blank on both a segment's active
+// m/s fields means "incomplete", not invalid — placeholder shown, no error);
 // genuinely invalid values (zero/negative, malformed time components) surface
 // as an inline error under that segment, via the same label-prefix routing the
 // other calculators use. isExtremeValue() is checked after every successful
@@ -41,12 +43,33 @@ function toKebabId(key) {
 
 const segments = HYROX_STATIONS.map((station) => {
   const id = toKebabId(station.key);
-  return {
+  const isRun = station.key.startsWith('run');
+
+  const base = {
     key: station.key,
     label: station.label,
+    isRun,
     minutesInput: document.getElementById(`${id}-minutes`),
     secondsInput: document.getElementById(`${id}-seconds`),
     errorEl: document.getElementById(`${id}-error`)
+  };
+
+  if (!isRun) {
+    return base;
+  }
+
+  return {
+    ...base,
+    mode: 'time',
+    timeFields: document.getElementById(`${id}-time-fields`),
+    paceFields: document.getElementById(`${id}-pace-fields`),
+    paceMinutesInput: document.getElementById(`${id}-pace-minutes`),
+    paceSecondsInput: document.getElementById(`${id}-pace-seconds`),
+    paceReadout: document.getElementById(`${id}-pace-readout`),
+    paceValue: document.getElementById(`${id}-pace-value`),
+    timeReadout: document.getElementById(`${id}-time-readout`),
+    timeValue: document.getElementById(`${id}-time-value`),
+    modeRadios: document.querySelectorAll(`input[name="${id}-mode"]`)
   };
 });
 
@@ -73,11 +96,17 @@ function showWarning(show) {
   extremeWarning.hidden = !show;
 }
 
-// Returns a { minutes, seconds } object, or null if both fields are blank
-// (Section 13: "incomplete", not invalid).
+// Returns a { minutes, seconds } object, or null if both of the segment's
+// currently-active fields are blank (Section 13: "incomplete", not invalid).
+// For a run in Pace mode, reads the pace fields instead of the time fields —
+// same shape either way, since a 1km run's pace and time are the same number.
 function readSegmentDuration(segment) {
-  const minutesRaw = segment.minutesInput.value.trim();
-  const secondsRaw = segment.secondsInput.value.trim();
+  const usesPaceFields = segment.isRun && segment.mode === 'pace';
+  const minutesInput = usesPaceFields ? segment.paceMinutesInput : segment.minutesInput;
+  const secondsInput = usesPaceFields ? segment.paceSecondsInput : segment.secondsInput;
+
+  const minutesRaw = minutesInput.value.trim();
+  const secondsRaw = secondsInput.value.trim();
 
   if (minutesRaw === '' && secondsRaw === '') {
     return null;
@@ -87,6 +116,29 @@ function readSegmentDuration(segment) {
     minutes: minutesRaw === '' ? 0 : Number(minutesRaw),
     seconds: secondsRaw === '' ? 0 : Number(secondsRaw)
   };
+}
+
+// Shows this run's OTHER metric underneath — Pace when in Time mode, Time when
+// in Pace mode — using the same resolved duration (no conversion needed, see
+// file header). Hidden when incomplete or not yet a valid positive duration.
+function renderRunReadout(run, duration) {
+  const readoutEl = run.mode === 'time' ? run.paceReadout : run.timeReadout;
+  const valueEl = run.mode === 'time' ? run.paceValue : run.timeValue;
+  const otherReadoutEl = run.mode === 'time' ? run.timeReadout : run.paceReadout;
+  otherReadoutEl.hidden = true;
+
+  if (duration === null) {
+    readoutEl.hidden = true;
+    return;
+  }
+  const seconds = duration.minutes * 60 + duration.seconds;
+  if (!Number.isFinite(seconds) || seconds <= 0) {
+    readoutEl.hidden = true;
+    return;
+  }
+  const formatted = formatTime(seconds);
+  valueEl.textContent = run.mode === 'time' ? `${formatted} /km` : formatted;
+  readoutEl.hidden = false;
 }
 
 function renderResult(totalSeconds) {
@@ -104,6 +156,9 @@ function recalculate() {
       hasIncomplete = true;
     }
     clearFieldError(segment.errorEl);
+    if (segment.isRun) {
+      renderRunReadout(segment, duration);
+    }
   });
 
   if (hasIncomplete) {
@@ -126,16 +181,34 @@ function recalculate() {
     const failedSegment = segments.find((segment) => err.message.startsWith(segment.label));
     if (failedSegment) {
       showFieldError(failedSegment.errorEl, err.message);
+      if (failedSegment.isRun) {
+        renderRunReadout(failedSegment, null);
+      }
     }
   }
 }
 
 const debouncedRecalculate = debounce(recalculate, DEBOUNCE_MS);
 
+function setRunMode(run, mode) {
+  run.mode = mode;
+  run.timeFields.hidden = mode === 'pace';
+  run.paceFields.hidden = mode === 'time';
+  clearFieldError(run.errorEl);
+  recalculate();
+}
+
 segments.forEach((segment) => {
-  [segment.minutesInput, segment.secondsInput].forEach((input) => {
-    input.addEventListener('input', debouncedRecalculate);
-  });
+  if (segment.isRun) {
+    segment.modeRadios.forEach((radio) => {
+      radio.addEventListener('change', () => setRunMode(segment, radio.value));
+    });
+  }
+
+  const inputs = segment.isRun
+    ? [segment.minutesInput, segment.secondsInput, segment.paceMinutesInput, segment.paceSecondsInput]
+    : [segment.minutesInput, segment.secondsInput];
+  inputs.forEach((input) => input.addEventListener('input', debouncedRecalculate));
 });
 
 form.addEventListener('submit', (e) => e.preventDefault());
