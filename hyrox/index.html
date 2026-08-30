@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hyrox Calculator — Cardio Pace &amp; Race Calculator</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="activity-hyrox">
+  <div class="page">
+    <header class="page-header">
+      <a class="back-link" href="../index.html">&larr; Activities</a>
+      <div class="page-header-row">
+        <h1 class="page-title">Hyrox</h1>
+      </div>
+    </header>
+
+    <form class="calculator" novalidate>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Run 1 <span class="leg-distance-badge">1km</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="run1-minutes">m</label>
+            <input type="number" id="run1-minutes" name="run1-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run1-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="run1-seconds">s</label>
+            <input type="number" id="run1-seconds" name="run1-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run1-error">
+          </div>
+        </div>
+        <p class="field-error" id="run1-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">SkiErg <span class="leg-distance-badge">1000m</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="skierg-minutes">m</label>
+            <input type="number" id="skierg-minutes" name="skierg-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="skierg-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="skierg-seconds">s</label>
+            <input type="number" id="skierg-seconds" name="skierg-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="skierg-error">
+          </div>
+        </div>
+        <p class="field-error" id="skierg-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Run 2 <span class="leg-distance-badge">1km</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="run2-minutes">m</label>
+            <input type="number" id="run2-minutes" name="run2-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run2-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="run2-seconds">s</label>
+            <input type="number" id="run2-seconds" name="run2-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run2-error">
+          </div>
+        </div>
+        <p class="field-error" id="run2-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Sled Push <span class="leg-distance-badge">50m</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="sled-push-minutes">m</label>
+            <input type="number" id="sled-push-minutes" name="sled-push-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="sled-push-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="sled-push-seconds">s</label>
+            <input type="number" id="sled-push-seconds" name="sled-push-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="sled-push-error">
+          </div>
+        </div>
+        <p class="field-error" id="sled-push-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Run 3 <span class="leg-distance-badge">1km</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="run3-minutes">m</label>
+            <input type="number" id="run3-minutes" name="run3-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run3-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="run3-seconds">s</label>
+            <input type="number" id="run3-seconds" name="run3-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run3-error">
+          </div>
+        </div>
+        <p class="field-error" id="run3-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Sled Pull <span class="leg-distance-badge">50m</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="sled-pull-minutes">m</label>
+            <input type="number" id="sled-pull-minutes" name="sled-pull-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="sled-pull-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="sled-pull-seconds">s</label>
+            <input type="number" id="sled-pull-seconds" name="sled-pull-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="sled-pull-error">
+          </div>
+        </div>
+        <p class="field-error" id="sled-pull-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Run 4 <span class="leg-distance-badge">1km</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="run4-minutes">m</label>
+            <input type="number" id="run4-minutes" name="run4-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run4-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="run4-seconds">s</label>
+            <input type="number" id="run4-seconds" name="run4-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run4-error">
+          </div>
+        </div>
+        <p class="field-error" id="run4-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Burpee Broad Jumps <span class="leg-distance-badge">80m</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="burpee-broad-jumps-minutes">m</label>
+            <input type="number" id="burpee-broad-jumps-minutes" name="burpee-broad-jumps-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="burpee-broad-jumps-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="burpee-broad-jumps-seconds">s</label>
+            <input type="number" id="burpee-broad-jumps-seconds" name="burpee-broad-jumps-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="burpee-broad-jumps-error">
+          </div>
+        </div>
+        <p class="field-error" id="burpee-broad-jumps-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Run 5 <span class="leg-distance-badge">1km</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="run5-minutes">m</label>
+            <input type="number" id="run5-minutes" name="run5-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run5-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="run5-seconds">s</label>
+            <input type="number" id="run5-seconds" name="run5-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run5-error">
+          </div>
+        </div>
+        <p class="field-error" id="run5-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Row <span class="leg-distance-badge">1000m</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="row-minutes">m</label>
+            <input type="number" id="row-minutes" name="row-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="row-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="row-seconds">s</label>
+            <input type="number" id="row-seconds" name="row-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="row-error">
+          </div>
+        </div>
+        <p class="field-error" id="row-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Run 6 <span class="leg-distance-badge">1km</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="run6-minutes">m</label>
+            <input type="number" id="run6-minutes" name="run6-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run6-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="run6-seconds">s</label>
+            <input type="number" id="run6-seconds" name="run6-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run6-error">
+          </div>
+        </div>
+        <p class="field-error" id="run6-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Farmers Carry <span class="leg-distance-badge">200m</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="farmers-carry-minutes">m</label>
+            <input type="number" id="farmers-carry-minutes" name="farmers-carry-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="farmers-carry-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="farmers-carry-seconds">s</label>
+            <input type="number" id="farmers-carry-seconds" name="farmers-carry-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="farmers-carry-error">
+          </div>
+        </div>
+        <p class="field-error" id="farmers-carry-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Run 7 <span class="leg-distance-badge">1km</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="run7-minutes">m</label>
+            <input type="number" id="run7-minutes" name="run7-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run7-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="run7-seconds">s</label>
+            <input type="number" id="run7-seconds" name="run7-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run7-error">
+          </div>
+        </div>
+        <p class="field-error" id="run7-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Sandbag Lunges <span class="leg-distance-badge">100m</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="sandbag-lunges-minutes">m</label>
+            <input type="number" id="sandbag-lunges-minutes" name="sandbag-lunges-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="sandbag-lunges-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="sandbag-lunges-seconds">s</label>
+            <input type="number" id="sandbag-lunges-seconds" name="sandbag-lunges-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="sandbag-lunges-error">
+          </div>
+        </div>
+        <p class="field-error" id="sandbag-lunges-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Run 8 <span class="leg-distance-badge">1km</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="run8-minutes">m</label>
+            <input type="number" id="run8-minutes" name="run8-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="run8-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="run8-seconds">s</label>
+            <input type="number" id="run8-seconds" name="run8-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="run8-error">
+          </div>
+        </div>
+        <p class="field-error" id="run8-error" role="alert" hidden></p>
+      </fieldset>
+
+      <fieldset class="field-group leg-group">
+        <legend class="section-label">Wall Balls <span class="leg-distance-badge">100 reps</span></legend>
+        <div class="time-input-group">
+          <div class="time-part">
+            <label for="wall-balls-minutes">m</label>
+            <input type="number" id="wall-balls-minutes" name="wall-balls-minutes" inputmode="numeric" min="0" step="1" placeholder="0" aria-describedby="wall-balls-error">
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="time-part">
+            <label for="wall-balls-seconds">s</label>
+            <input type="number" id="wall-balls-seconds" name="wall-balls-seconds" inputmode="numeric" min="0" max="59" step="1" placeholder="00" aria-describedby="wall-balls-error">
+          </div>
+        </div>
+        <p class="field-error" id="wall-balls-error" role="alert" hidden></p>
+      </fieldset>
+
+      <section class="result" aria-live="polite">
+        <p class="result-label">Total Time</p>
+        <p class="hero-result">&ndash;:&ndash;&ndash;:&ndash;&ndash;</p>
+        <p class="result-warning" id="extreme-warning" hidden></p>
+      </section>
+
+    </form>
+  </div>
+
+  <script type="module" src="../js/ui/hyrox-ui.js"></script>
+</body>
+</html>

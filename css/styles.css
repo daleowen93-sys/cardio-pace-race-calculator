@@ -25,6 +25,7 @@
   --accent-cycling: #2F8F3E;
   --accent-swimming: #0E8FA8;
   --accent-triathlon: #6A4FE0;
+  --accent-hyrox: #B7791F;
 
   /* Text-safe variants, darkened just enough to clear 4.5:1 against a light
      surface for small text (Section 14: WCAG AA) — the plain accents above read
@@ -35,6 +36,7 @@
   --accent-cycling-text: #2C863A;
   --accent-swimming-text: #0D8197;
   --accent-triathlon-text: #6A4FE0;
+  --accent-hyrox-text: #966000;
 
   /* Safe fallback for --accent/--accent-text on any page/element that isn't
      scoped to one of the four .activity-* classes below (e.g. the activity-
@@ -74,6 +76,7 @@
     --accent-cycling-text: #3B964A;
     --accent-swimming-text: #1391AA;
     --accent-triathlon-text: #8B76E7;
+    --accent-hyrox-text: #E8A93D;
   }
 }
 
@@ -82,6 +85,7 @@
 .activity-cycling { --accent: var(--accent-cycling); --accent-text: var(--accent-cycling-text); }
 .activity-swimming { --accent: var(--accent-swimming); --accent-text: var(--accent-swimming-text); }
 .activity-triathlon { --accent: var(--accent-triathlon); --accent-text: var(--accent-triathlon-text); }
+.activity-hyrox { --accent: var(--accent-hyrox); --accent-text: var(--accent-hyrox-text); }
 
 /* --------------------------------------------------------------------------
    2. Reset & base
@@ -614,6 +618,7 @@ input[type="number"]:focus-visible {
 .activity-card-cycling { --card-accent: var(--accent-cycling); }
 .activity-card-swimming { --card-accent: var(--accent-swimming); }
 .activity-card-triathlon { --card-accent: var(--accent-triathlon); }
+.activity-card-hyrox { --card-accent: var(--accent-hyrox); }
 
 /* --------------------------------------------------------------------------
    12. Accessibility — focus states & reduced motion (Section 14)
