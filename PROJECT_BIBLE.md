@@ -1,8 +1,8 @@
 # Cardio Pace & Race Calculator — Project Bible
 
-Version: 0.4
-Status: Frontend Development complete — all four calculators (Running, Cycling, Swimming, Triathlon) fully functional (logic + UI)
-Last updated: 29 August 2026
+Version: 0.5
+Status: All 5 calculators (Running, Cycling, Swimming, Triathlon, Hyrox) live and deployed. Next major phase: My Performance — PB Tracker & Goals (requirements confirmed, architecture not yet decided).
+Last updated: 1 September 2026
 Project Owner (beginner developer, Windows)
 
 ## How to use this document
@@ -62,15 +62,17 @@ Keep this file updated as decisions are confirmed. Paste it into this Project's 
 
 **Post-MVP expansion, 30 Aug 2026 (Decision #28):** a 5th calculator, Hyrox, was added — see Section 9 for its structure. It's a fixed-format total-time calculator (no solve-for-missing-value modes, no distance selection, no metric/imperial toggle), so it doesn't follow every bullet above the way the original 4 do.
 
+**Post-MVP expansion, 1 Sep 2026 (Decision #31):** a new major feature, My Performance — PB Tracker & Goals, was approved — see Section 27. This is the first feature to require accounts and server-side persistence, both explicitly excluded from the original MVP above (see Section 7) — a deliberate, flagged expansion, not scope creep, and one the project's own Product Vision (Section 1) and Future Roadmap (Section 26) already anticipated. The 5 calculators themselves remain client-side-only and unaffected.
+
 ## 7. Items Excluded from MVP
 **FUTURE IDEA** (explicitly deferred per your instructions, not to be added without approval):
 - Dedicated mobile application
-- User accounts / login
-- Saved calculations / history
 - Race planning tools
 - Training tools
-- Performance predictions
-- Broader endurance-training platform features
+- AI-driven performance predictions
+- Broader endurance-training platform features beyond My Performance V1 (see Section 27)
+
+**No longer excluded, 1 Sep 2026 (Decision #31) — now in progress, not yet built:** User accounts/login and saved PB history, which were excluded here, are the foundation of My Performance — PB Tracker & Goals (Section 27). They move from "excluded" to "planned, requirements confirmed" — the actual auth/database technology and implementation are not yet built; see Section 24.
 
 ## 8. User Journeys
 **PROPOSED (draft, to be refined in Product Scope & UX conversation):**
@@ -184,6 +186,8 @@ Keep this file updated as decisions are confirmed. Paste it into this Project's 
 - UI layer calls into the logic modules and only handles display, input capture, and formatting.
 - Static hosting (no server to run or pay for).
 
+**Superseded in part, 1 Sep 2026 (Decision #31):** the "no backend/server needed" premise above applies to the 5 calculators only, which remain unchanged. My Performance — PB Tracker & Goals (Section 27) requires accounts and server-side persistence, so this project now has a backend of some form. Which technology (auth provider, database/BaaS, hosting shape) is a **REQUIRES DECISION** item explicitly deferred to the Backend, Data & Architecture conversation — see Section 24.
+
 ## 16. Technology Decisions
 **CONFIRMED — 22 July 2026.**
 
@@ -292,7 +296,9 @@ Visual design direction, result interaction, Triathlon's solve-for model, and re
 - Revisit branching strategy (e.g. feature branches) only if/when complexity grows — no need to over-engineer this now.
 
 ## 21. Deployment Approach
-**PROPOSED:** GitHub Pages, deployed from the `main` branch. Free, no server management, updates automatically when you push changes once set up.
+**CONFIRMED (for the 5 calculators):** GitHub Pages, deployed from the `main` branch. Free, no server management, updates automatically when you push changes once set up.
+
+**REQUIRES DECISION, 1 Sep 2026 — My Performance:** GitHub Pages can keep serving the static calculator frontend, but My Performance's backend (auth + database) needs somewhere to run — GitHub Pages alone cannot host it. Exactly how (a backend-as-a-service, serverless functions, a small managed server, etc.) is deferred to the Backend, Data & Architecture conversation, alongside the technology choice in Section 15.
 
 ## 22. Development Phases
 **PROPOSED high-level roadmap** (detail in the deliverables below):
@@ -307,6 +313,16 @@ Visual design direction, result interaction, Triathlon's solve-for model, and re
 8. Full responsive polish + accessibility pass
 9. Testing & QA pass
 10. Deploy v1
+
+**My Performance — PB Tracker & Goals phases (added 1 Sep 2026, Decision #31 — see Section 27):**
+A. Product & requirements — confirmed 1 Sep 2026 (this phase)
+B. Backend, Data & Architecture conversation — auth approach, backend/database technology, hosting shape, real schema, privacy model (REQUIRES DECISION — see Section 24)
+C. Implement backend + auth per Phase B's decisions
+D. Build My Performance UI for Strength
+E. Build My Performance UI for Running, then fast-follow Cycling/Swimming
+F. Testing & QA pass for My Performance, extending Section 19's approach to cover auth and persistence
+G. Deploy
+H. Future (not scheduled): calculator-to-goal integration, Triathlon/Hyrox performance tracking, then the wider roadmap (Section 26)
 
 ## 23. Decision Log
 | # | Date | Decision | Status |
@@ -342,23 +358,88 @@ Visual design direction, result interaction, Triathlon's solve-for model, and re
 | 28 | 30 Aug 2026 | Hyrox added as a 5th calculator, expanding beyond the original 4-calculator MVP (Decision #2). Official 16-segment structure and station distances/reps verified via web search against current HYROX specs (Red Bull and hyroxfitness.com station guides) rather than assumed from memory, per this project's testing standard. | CONFIRMED |
 | 29 | 30 Aug 2026 | Hyrox UX decisions: (a) each of the 8 runs gets its own individual time input rather than one shared average pace, to reflect realistic fatigue-driven pacing; (b) no division/weight selector — all 8 stations are generic "time to complete" inputs, since station weight doesn't affect the time math | CONFIRMED |
 | 30 | 31 Aug 2026 | Extended Decision #29: the 8 Hyrox runs share ONE Time/Pace toggle (revised same day from an initial per-run-toggle design), showing the other metric underneath each run. Since every Hyrox run is exactly 1km, pace-per-km and time-for-that-run are the same number, so this needed no unit-conversion round-trip through running.js — unlike Triathlon's equivalent feature. A single shared toggle was chosen over 8 independent ones because run splits realistically all come from the same source in one sitting (a watch, or a pacing plan) — mixing modes per run isn't a real need. The 8 stations were not extended this way; they have no natural pace concept. | CONFIRMED |
+| 31 | 1 Sep 2026 | My Performance — PB Tracker & Goals approved as the next major feature, expanding beyond the original 4/5-calculator MVP (Decision #2) into accounts + server-side persistence for the first time. This is a deliberate, flagged expansion the project's own Product Vision (Section 1) and Future Roadmap (Section 26) already anticipated, not scope creep. Full requirements analysis in Section 27. | CONFIRMED |
+| 32 | 1 Sep 2026 | My Performance V1 scope confirmed: Strength + Running categories only (Cycling/Swimming to fast-follow — same data shape); current PB is always computed from logged history, never stored as its own field; strength "current PB" ranked by best estimated 1RM (not a separate PB-type system); one active goal per exercise/category, no deadlines/history; progress shown as a plain chronological list, not charts; no calculator-to-goal UI integration in V1. See Section 27 for full detail. | CONFIRMED |
+| 33 | 1 Sep 2026 | Triathlon/Hyrox performance tracking explicitly deferred from My Performance V1 despite being part of the long-term hybrid-athlete vision — their composite multi-segment shape isn't needed to validate the core tracker. The data model should allow for them later without a rebuild, but no UI/entry forms are built for them now. | CONFIRMED |
+| 34 | 1 Sep 2026 | Authentication approach, database/backend technology, hosting shape for My Performance, and the real schema are explicitly NOT decided in this conversation — deferred to a dedicated Backend, Data & Architecture conversation, per Decision #31's requirements as input. See Section 24. | REQUIRES DECISION |
 
 ## 24. Risks & Unresolved Questions
-Standard race distances and rounding rules are confirmed for all four calculators (Running, Cycling, Swimming, Triathlon) as of 29 Jul 2026 — see Decision Log, Section 23, items 6–17. MVP scope as a whole set (Section 6, Decision #2) was signed off 28 Aug 2026. No items remain in the REQUIRES DECISION category.
+Standard race distances and rounding rules are confirmed for all four calculators (Running, Cycling, Swimming, Triathlon) as of 29 Jul 2026 — see Decision Log, Section 23, items 6–17. MVP scope as a whole set (Section 6, Decision #2) was signed off 28 Aug 2026.
+
+**REQUIRES DECISION, 1 Sep 2026 (Decision #34) — My Performance backend:**
+- Authentication approach (a managed auth provider is the likely direction over rolling your own, given the security stakes of handling real user accounts — but not decided).
+- Database/backend technology (a backend-as-a-service bundling auth+db+hosting is the likely direction given "beginner-friendly, low-cost, maintainable" — but not decided).
+- Persistence model (relational vs. document store) — falls out of the backend choice above.
+- Hosting shape for the new backend, alongside the existing GitHub Pages frontend (Section 21).
+- The actual data schema (Section 27 defines entities conceptually only).
+
+All five are explicitly deferred to a dedicated Backend, Data & Architecture conversation — do not decide these ad hoc in a feature-build conversation.
 
 **Lower-priority, can wait:**
 - Visual design direction/branding.
 - Whether v1 should be a Progressive Web App (offline support) — currently out of scope unless you want to add it.
 
 ## 25. Current Project Status
-Version 0.3 of the Project Bible. Technology stack, global unit-toggle behaviour, and default-unit detection are confirmed. Phase 0 (setup) is complete: GitHub repository cardio-pace-race-calculator created under account da1eowen93-sys, connected via GitHub Desktop, folder/file skeleton scaffolded per Section 17, and pushed to GitHub.com — verified 22 Jul 2026. No application code has been written yet (all scaffolded files are intentionally empty). Standard race distances, per-calculator rounding rules, and input validation for all four calculators (Running, Cycling, Swimming, Triathlon) are now fully confirmed — verified 29 Jul 2026. The next phase is UI/UX & Visual Design, to establish layout, colour, and typography before any code is written. UI/UX & Visual Design direction — visual style, typography, colour tokens, result interaction model, Triathlon's solve-for model, and responsive breakpoints — is now fully confirmed, verified 30 Jul 2026, via an interactive mockup reviewed across mobile, tablet, and desktop. No production application code has been written yet. The next phase is Frontend Development, beginning with the Running calculator per the locked build order in Section 22. Frontend Development is now complete for all four calculators — Running, Cycling, Swimming, and Triathlon each have a working logic module and a fully wired UI, verified 29 Aug 2026. Formal testing & QA (Section 19) is now complete, verified 28 Aug 2026: a Jest suite of 92 tests covers formula correctness, unit conversion, validation, and rounding across all five logic modules, and a manual browser QA pass confirmed mobile responsiveness, keyboard accessibility, and error states across all four calculators — during which a missing extreme-value warning on the Running calculator was found and fixed for consistency with Cycling and Swimming. Cross-browser testing was limited to a Chromium-based browser in this environment. Deployment is complete: the app is live on GitHub Pages. Two post-deployment refinements were made 28 Aug 2026: unit auto-detection was removed in favour of always defaulting to metric, and Triathlon gained a per-leg Pace/Speed input mode alongside the original direct-Time input. A 5th calculator, Hyrox, was added 30 Aug 2026 as a post-MVP expansion (Decision #28) — a fixed 16-segment total-time calculator, verified against official HYROX race specs and a hand-calculated example (8x 5:00 runs + 8x 3:00 stations = 1:04:00).
+Version 0.3 of the Project Bible. Technology stack, global unit-toggle behaviour, and default-unit detection are confirmed. Phase 0 (setup) is complete: GitHub repository cardio-pace-race-calculator created under account da1eowen93-sys, connected via GitHub Desktop, folder/file skeleton scaffolded per Section 17, and pushed to GitHub.com — verified 22 Jul 2026. No application code has been written yet (all scaffolded files are intentionally empty). Standard race distances, per-calculator rounding rules, and input validation for all four calculators (Running, Cycling, Swimming, Triathlon) are now fully confirmed — verified 29 Jul 2026. The next phase is UI/UX & Visual Design, to establish layout, colour, and typography before any code is written. UI/UX & Visual Design direction — visual style, typography, colour tokens, result interaction model, Triathlon's solve-for model, and responsive breakpoints — is now fully confirmed, verified 30 Jul 2026, via an interactive mockup reviewed across mobile, tablet, and desktop. No production application code has been written yet. The next phase is Frontend Development, beginning with the Running calculator per the locked build order in Section 22. Frontend Development is now complete for all four calculators — Running, Cycling, Swimming, and Triathlon each have a working logic module and a fully wired UI, verified 29 Aug 2026. Formal testing & QA (Section 19) is now complete, verified 28 Aug 2026: a Jest suite of 92 tests covers formula correctness, unit conversion, validation, and rounding across all five logic modules, and a manual browser QA pass confirmed mobile responsiveness, keyboard accessibility, and error states across all four calculators — during which a missing extreme-value warning on the Running calculator was found and fixed for consistency with Cycling and Swimming. Cross-browser testing was limited to a Chromium-based browser in this environment. Deployment is complete: the app is live on GitHub Pages. Two post-deployment refinements were made 28 Aug 2026: unit auto-detection was removed in favour of always defaulting to metric, and Triathlon gained a per-leg Pace/Speed input mode alongside the original direct-Time input. A 5th calculator, Hyrox, was added 30 Aug 2026 as a post-MVP expansion (Decision #28) — a fixed 16-segment total-time calculator, verified against official HYROX race specs and a hand-calculated example (8x 5:00 runs + 8x 3:00 stations = 1:04:00). On 1 Sep 2026, a new major feature — My Performance: PB Tracker & Goals — was approved (Decision #31), the project's first move beyond a purely client-side, stateless app. Requirements, V1 scope, user journeys, and conceptual data entities are confirmed and documented in Section 27; no backend technology, schema, or code has been chosen or built yet — that's the explicit job of the next phase, a dedicated Backend, Data & Architecture conversation (Decision #34).
 
 ## 26. Future Roadmap
 **FUTURE IDEA (not part of v1, listed here only to keep architecture expansion-friendly):**
 - Dedicated mobile app (reusing the logic modules from Section 15/17)
-- User accounts
-- Saved calculations
 - Race planning tools
 - Training tools
-- Performance predictions
-- Broader endurance-training platform
+- AI-driven performance predictions / AI-generated hybrid training programs
+- Full workout programming
+- Human coaching interaction
+- Race-day nutrition planning, sweat-rate/hydration tools
+- Social features: feed, followers, kudos, comments, direct messaging, leaderboards
+- Photo/video attachments to achievements
+- Wearable integrations (Garmin, Strava, Apple Health)
+- Broader hybrid-athlete platform beyond My Performance V1
+
+**Moved from here into active planning, 1 Sep 2026 (Decision #31):** user accounts and saved performance history are no longer just a future idea — they're the confirmed subject of My Performance — PB Tracker & Goals (Section 27), currently at the requirements stage.
+
+## 27. My Performance — PB Tracker & Goals
+
+**CONFIRMED, 1 Sep 2026 (Decisions #31–#33) — purpose and strategic role:** a single place for a user to store, view, and track personal best performances across strength and endurance sports, and set goals against them. This is the first step toward the long-term hybrid-athlete platform described below — not the whole thing.
+
+**Long-term vision (FUTURE IDEA, informs the data model but is NOT being built now):** track strength and endurance performance and full lift history; store race/endurance PBs; set goals; attach photos/videos to achievements; log training; receive AI-generated hybrid training programs; plan around multiple simultaneous sport goals; race-day nutrition planning; sweat-rate/hydration tools; social sharing, followers, kudos, comments; interaction with real coaches. None of this is scheduled — see Section 26.
+
+**CONFIRMED — V1 scope (Decision #32):**
+- User accounts (basic auth — technology TBD, Section 24) and a minimal profile (display name only; no bio/photo/settings in V1).
+- Two categories only: **Strength** and **Running**. Cycling/Swimming are the same underlying data shape as Running (distance + time + date) and are the intended fast-follow, not full V1. Triathlon/Hyrox are a third, more complex composite shape and are explicitly deferred (Decision #33).
+- Strength entry fields: exercise, weight, reps, date, optional bodyweight, optional notes.
+- Running entry fields: distance (standard or custom — reusing the same distances already confirmed in Section 9 where sensible), time, date. Pace is derived, never stored.
+- **Current PB is always computed from logged history, never stored as its own field.** Every logged attempt is kept; "current PB" is whichever historical entry ranks best under a fixed rule, queried on demand. This avoids stale-cache bugs and keeps the door open to new ranking rules later without a schema change.
+- **Strength PB ranking rule for V1: best estimated 1RM**, computed from each entry's weight + reps via a standard formula (formula choice deferred to implementation, not a product decision). This deliberately does NOT assume every PB is a literal 1-rep attempt — any logged rep range contributes, made comparable via the estimated-1RM conversion. Rep PBs, Weight PBs, and Volume PBs are NOT separate tracked features in V1; they remain possible later as new queries over the same stored (weight, reps, date) data, requiring no new fields.
+- **Running PB ranking rule for V1: fastest time at a given distance.**
+- **Goals:** one active goal value per exercise/category. No deadlines, no goal history/versioning, no multiple simultaneous goals per item in V1.
+- **Progress view:** a plain chronological list (date + value + notes) per exercise/category. No charts/graphs in V1.
+- **No calculator-to-goal integration UI in V1** (e.g. no "set 19:59 as my 5K goal" button from a calculator result) — deferred, but the data model must not preclude it later (see below).
+
+**CONFIRMED — architecturally anticipated but NOT built in V1 (Decision #32/#33):**
+- Cycling and Swimming as full My Performance categories.
+- Rep PBs / Weight PBs / Volume PBs as distinct views.
+- Triathlon and Hyrox performance records — a composite, multi-segment shape the data model should be able to accommodate later without a rebuild, but with no entry forms or UI now.
+- A "set as goal" action linking a calculator result directly to a My Performance goal. This app's canonical units (metres, seconds — Section 12) already match what a tracker would store, so this is intended to be a thin later integration rather than a redesign, provided My Performance's own schema (chosen in the Backend, Data & Architecture conversation) also speaks metres/seconds internally.
+- Any field for attaching media to a PB entry — no upload/storage built, but the entry shape shouldn't actively block adding one later.
+
+**CONFIRMED — explicitly OUT of scope for this phase (not even architected for yet):** social feed, followers, kudos, comments, direct messaging, AI-generated training programs, human coaching, actual photo/video upload and storage, wearable integrations (Garmin/Strava/Apple Health), nutrition/hydration tracking, full workout programming, leaderboards. These require dedicated design work of their own if and when they're prioritised.
+
+**CONFIRMED — main user journeys:**
+1. Sign up / log in → land on My Performance home (empty state prompts a first entry).
+2. Log a strength PB → pick/add exercise → weight, reps, date, optional bodyweight/notes → save → history updates, current PB (and its estimated 1RM) recalculated.
+3. Log a running PB → pick standard or custom distance → time, date → save → history updates, current PB recalculated, pace shown as derived context.
+4. View an exercise/category page → current PB, active goal (if set), full chronological history.
+5. Set/update a goal → enter target → shown alongside current PB with the difference.
+6. My Performance home → summary across tracked items (current PB + goal per item).
+
+**CONFIRMED — major data entities (conceptual only — NOT a schema; the real schema is Backend, Data & Architecture's job, Decision #34):**
+- **User** — owns everything below.
+- **Profile** — 1:1 with User, kept separate from the auth record for future flexibility.
+- **ExerciseDefinition** — the strength catalog (e.g. Bench Press, Back Squat).
+- **SportCategory** — Running now; Cycling/Swimming/Triathlon/Hyrox later, mirroring the existing calculator activities (Section 9).
+- **PerformanceEntry** — the single historical ledger: user, category/exercise, date, and type-specific values (strength: weight+reps+optional bodyweight+notes; endurance: distance+time). Current PB is a query over this table, never its own row.
+- **Goal** — user + exercise/category + target value.
+- Relationships: User 1—1 Profile; User 1—many PerformanceEntry; User 1—many Goal; PerformanceEntry many—1 ExerciseDefinition-or-(SportCategory+Distance); Goal many—1 ExerciseDefinition-or-(SportCategory+Distance).
+
+**CONFIRMED — development phases:** see Section 22's "My Performance" phase list (A–H). Phase A (this requirements analysis) is complete; Phase B (Backend, Data & Architecture) is next — see Section 24 for exactly what it needs to decide.
